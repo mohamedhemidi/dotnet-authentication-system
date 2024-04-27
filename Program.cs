@@ -1,4 +1,6 @@
 using backend_core.Data;
+using backend_core.Interfaces;
+using backend_core.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,8 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseMySql(dbConnection, ServerVersion.AutoDetect(dbConnection));
 });
+
+builder.Services.AddScoped<ICategoryRepository , CategoryRepository>();
 
 
 var app = builder.Build();
