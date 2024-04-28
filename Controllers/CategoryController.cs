@@ -25,7 +25,8 @@ namespace backend_core.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var categories =  await _categoryRepo.GetAll();
+            // var categories =  await _categoryRepo.GetAll();
+            var categories =  await _categoryRepo.GetAllWithInclude();
             var categoriesDTO = categories.Select(s => s.ToCategoryDTO());
             return Ok(categoriesDTO);
         }

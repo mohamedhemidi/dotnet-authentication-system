@@ -15,7 +15,7 @@ namespace backend_core.Mappers
             {
                 Id = CategoryModel.Id,
                 Name = CategoryModel.Name,
-                Skills = CategoryModel.Skills
+                Skills = CategoryModel.Skills.Select(s => s.ToSkillDTO()).ToList()
             };
         }
         public static Category ToCategoryCreateDTO(this CreateCategoryRequestDTO CategoryDTO)

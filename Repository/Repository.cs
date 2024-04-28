@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using backend_core.Data;
 using backend_core.Interfaces;
+using backend_core.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend_core.Repository
