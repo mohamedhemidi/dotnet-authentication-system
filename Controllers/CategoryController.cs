@@ -33,7 +33,8 @@ namespace backend_core.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var category = await _categoryRepo.Get(x => x.Id == id);
+            // var category = await _categoryRepo.Get(x => x.Id == id);
+            var category = await _categoryRepo.GetWithInclude(x => x.Id == id);
             if (category == null)
             {
                 return NotFound();
