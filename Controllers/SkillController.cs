@@ -85,12 +85,12 @@ namespace backend_core.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var Category = await _skillRepo.Get(c => c.Id == id);
-            if (Category == null)
+            var Skill = await _skillRepo.Get(c => c.Id == id);
+            if (Skill == null)
             {
                 return NotFound();
             }
-            _skillRepo.Delete(Category);
+            _skillRepo.Delete(Skill);
             await _skillRepo.Save();
             return NoContent();
         }
