@@ -18,6 +18,11 @@ namespace backend_core.Repository
             _db = db;
         }
 
+        public async Task<bool> CategoryExists(int id)
+        {
+            return await _db.categories.AnyAsync(c => c.Id == id);
+        }
+
         public async Task<List<Category>> GetAllWithInclude()
         {
             return await _db.categories.Include(c => c.Skills).ToListAsync();

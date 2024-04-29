@@ -12,6 +12,7 @@ namespace backend_core.Interfaces
         // Task Update(Category data);
         Task<List<Category>> GetAllWithInclude();
         Task<Category> GetWithInclude(Expression<Func<Category, bool>> filter);
+        Task<bool> CategoryExists(int id);
         Task Save();
     }
 }

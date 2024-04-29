@@ -15,13 +15,15 @@ namespace backend_core.Mappers
             {
                 Id = SkillModel.Id,
                 Name = SkillModel.Name,
+                CategoryId = SkillModel.CategoryId,
             };
         }
-        public static Skill ToSkillCreateDTO(this CreateSkillRequestDTO SkillDTO)
+        public static Skill ToSkillCreateDTO(this CreateSkillRequestDTO SkillDTO, int CategoryId)
         {
             return new Skill
             {
                 Name = SkillDTO.Name,
+                CategoryId = CategoryId
             };
         }
     }

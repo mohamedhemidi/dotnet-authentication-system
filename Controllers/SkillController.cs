@@ -6,6 +6,7 @@ using backend_core.DTOs.Skill;
 using backend_core.Interfaces;
 using backend_core.Mappers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 
 namespace backend_core.Controllers
 {
@@ -14,9 +15,11 @@ namespace backend_core.Controllers
     public class SkillController : ControllerBase
     {
         private readonly ISkillRepository _skillRepo;
-        public SkillController(ISkillRepository skillRepo)
+        private readonly ICategoryRepository _categoryRepo;
+        public SkillController(ISkillRepository skillRepo, ICategoryRepository categoryRepo)
         {
             _skillRepo = skillRepo;
+            _categoryRepo = categoryRepo;
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -36,10 +39,14 @@ namespace backend_core.Controllers
             return Ok(category.ToSkillDTO());
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateSkillRequestDTO SkillDTO)
+        [HttpPost("{CategoryId}")]
+        public async Task<IActionResult> Create([FromRoute] int CategoryId, CreateSkillRequestDTO SkillDTO)
         {
-            var skillModel = SkillDTO.ToSkillCreateDTO();
+            // Check if Category does not exist
+            if(!await _categoryRepo.CategoryExists(CategoryId)) {
+                return BadRequest("Category does not exist!");
+            }
+            var skillModel = SkillDTO.ToSkillCreateDTO(CategoryId);
             await _skillRepo.Create(skillModel);
             await _skillRepo.Save();
             return CreatedAtAction(nameof(GetById), new { id = skillModel.Id }, skillModel.ToSkillDTO());
