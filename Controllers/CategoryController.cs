@@ -30,7 +30,7 @@ namespace backend_core.Controllers
             var categoriesDTO = categories.Select(s => s.ToCategoryDTO());
             return Ok(categoriesDTO);
         }
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             // var category = await _categoryRepo.Get(x => x.Id == id);
@@ -51,7 +51,7 @@ namespace backend_core.Controllers
             return CreatedAtAction(nameof(GetById), new { id = categoryModel.Id }, categoryModel.ToCategoryDTO());
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateCategoryRequestDTO CategoryDTO)
         {
             var Category = await _categoryRepo.Get(c => c.Id == id);
@@ -65,7 +65,7 @@ namespace backend_core.Controllers
             return Ok(Category.ToCategoryDTO());
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var Category = await _categoryRepo.Get(c => c.Id == id);

@@ -28,7 +28,7 @@ namespace backend_core.Controllers
             var categoriesDTO = categories.Select(s => s.ToSkillDTO());
             return Ok(categoriesDTO);
         }
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var category = await _skillRepo.Get(x => x.Id == id);
@@ -39,7 +39,7 @@ namespace backend_core.Controllers
             return Ok(category.ToSkillDTO());
         }
 
-        [HttpPost("{CategoryId}")]
+        [HttpPost("{CategoryId:guid}")]
         public async Task<IActionResult> Create([FromRoute] Guid CategoryId, CreateSkillRequestDTO SkillDTO)
         {
             // Check if Category does not exist
@@ -53,7 +53,7 @@ namespace backend_core.Controllers
             return CreatedAtAction(nameof(GetById), new { id = skillModel.Id }, skillModel.ToSkillDTO());
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateSkillRequestDTO SkillDto)
         {
 
@@ -82,7 +82,7 @@ namespace backend_core.Controllers
             return Ok(Skill.ToSkillDTO());
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var Skill = await _skillRepo.Get(c => c.Id == id);
