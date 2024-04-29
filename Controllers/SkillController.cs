@@ -24,7 +24,7 @@ namespace backend_core.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var categories =  await _skillRepo.GetAll();
+            var categories = await _skillRepo.GetAll();
             var categoriesDTO = categories.Select(s => s.ToSkillDTO());
             return Ok(categoriesDTO);
         }
@@ -43,7 +43,8 @@ namespace backend_core.Controllers
         public async Task<IActionResult> Create([FromRoute] int CategoryId, CreateSkillRequestDTO SkillDTO)
         {
             // Check if Category does not exist
-            if(!await _categoryRepo.CategoryExists(CategoryId)) {
+            if (!await _categoryRepo.CategoryExists(CategoryId))
+            {
                 return BadRequest("Category does not exist!");
             }
             var skillModel = SkillDTO.ToSkillCreateDTO(CategoryId);
@@ -53,17 +54,32 @@ namespace backend_core.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSkillRequestDTO CategoryDTO)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSkillRequestDTO SkillDto)
         {
-            var Category = await _skillRepo.Get(c => c.Id == id);
-            if (Category == null)
+
+            var Skill = await _skillRepo.Get(c => c.Id == id);
+            if (Skill == null)
             {
                 return NotFound();
             }
-            Category.Name = CategoryDTO.Name;
+
+            Skill.Name = SkillDto.Name;
+
+            if (SkillDto.CategoryId == 0 | SkillDto.CategoryId == null)
+            {
+                Skill.CategoryId = Skill.CategoryId;
+            }
+            else
+            {
+                if (!await _categoryRepo.CategoryExists(SkillDto.CategoryId))
+                {
+                    return BadRequest("Provided Category does not exist!");
+                }
+                Skill.CategoryId = SkillDto.CategoryId;
+            }
 
             await _skillRepo.Save();
-            return Ok(Category.ToSkillDTO());
+            return Ok(Skill.ToSkillDTO());
         }
 
         [HttpDelete("{id}")]
@@ -78,6 +94,6 @@ namespace backend_core.Controllers
             await _skillRepo.Save();
             return NoContent();
         }
-        
+
     }
 }

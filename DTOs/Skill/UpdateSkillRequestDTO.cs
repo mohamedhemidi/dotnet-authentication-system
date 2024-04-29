@@ -8,5 +8,6 @@ namespace backend_core.DTOs.Skill
     public class UpdateSkillRequestDTO
     {
         public string Name { get; set; }
+        public int CategoryId { get; set; }
     }
 }
