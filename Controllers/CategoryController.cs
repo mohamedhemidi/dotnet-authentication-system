@@ -31,7 +31,7 @@ namespace backend_core.Controllers
             return Ok(categoriesDTO);
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             // var category = await _categoryRepo.Get(x => x.Id == id);
             var category = await _categoryRepo.GetWithInclude(x => x.Id == id);
@@ -52,7 +52,7 @@ namespace backend_core.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCategoryRequestDTO CategoryDTO)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateCategoryRequestDTO CategoryDTO)
         {
             var Category = await _categoryRepo.Get(c => c.Id == id);
             if (Category == null)
@@ -66,7 +66,7 @@ namespace backend_core.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var Category = await _categoryRepo.Get(c => c.Id == id);
             if (Category == null)

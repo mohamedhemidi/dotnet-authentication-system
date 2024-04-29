@@ -29,7 +29,7 @@ namespace backend_core.Controllers
             return Ok(categoriesDTO);
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var category = await _skillRepo.Get(x => x.Id == id);
             if (category == null)
@@ -40,7 +40,7 @@ namespace backend_core.Controllers
         }
 
         [HttpPost("{CategoryId}")]
-        public async Task<IActionResult> Create([FromRoute] int CategoryId, CreateSkillRequestDTO SkillDTO)
+        public async Task<IActionResult> Create([FromRoute] Guid CategoryId, CreateSkillRequestDTO SkillDTO)
         {
             // Check if Category does not exist
             if (!await _categoryRepo.CategoryExists(CategoryId))
@@ -54,7 +54,7 @@ namespace backend_core.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSkillRequestDTO SkillDto)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateSkillRequestDTO SkillDto)
         {
 
             var Skill = await _skillRepo.Get(c => c.Id == id);
@@ -65,7 +65,7 @@ namespace backend_core.Controllers
 
             Skill.Name = SkillDto.Name;
 
-            if (SkillDto.CategoryId == 0 | SkillDto.CategoryId == null)
+            if (SkillDto.CategoryId == null)
             {
                 Skill.CategoryId = Skill.CategoryId;
             }
@@ -83,7 +83,7 @@ namespace backend_core.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var Skill = await _skillRepo.Get(c => c.Id == id);
             if (Skill == null)

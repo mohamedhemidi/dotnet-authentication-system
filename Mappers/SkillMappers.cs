@@ -18,7 +18,7 @@ namespace backend_core.Mappers
                 CategoryId = SkillModel.CategoryId,
             };
         }
-        public static Skill ToSkillCreateDTO(this CreateSkillRequestDTO SkillDTO, int CategoryId)
+        public static Skill ToSkillCreateDTO(this CreateSkillRequestDTO SkillDTO, Guid CategoryId)
         {
             return new Skill
             {

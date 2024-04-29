@@ -8,6 +8,6 @@ namespace backend_core.DTOs.Skill
     public class CreateSkillRequestDTO
     {
         public string Name { get; set; }
-        public int? CategoryId { get; set; }
+        public Guid? CategoryId { get; set; }
     }
 }

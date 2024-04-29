@@ -18,7 +18,7 @@ namespace backend_core.Repository
             _db = db;
         }
 
-        public async Task<bool> CategoryExists(int id)
+        public async Task<bool> CategoryExists(Guid id)
         {
             return await _db.categories.AnyAsync(c => c.Id == id);
         }
