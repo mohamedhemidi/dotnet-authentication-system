@@ -18,7 +18,7 @@ namespace backend_core.Controllers
     {
 
         private readonly ICategoryRepository _categoryRepo;
-        public CategoryController(ApplicationDBContext db, ICategoryRepository categoryRepo)
+        public CategoryController(ICategoryRepository categoryRepo)
         {
             _categoryRepo = categoryRepo;
         }
