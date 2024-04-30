@@ -40,7 +40,9 @@ namespace backend_core.Repository
                 }
             }
 
-            return await categories.ToListAsync();
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+
+            return await categories.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Category> GetWithInclude(Expression<Func<Category, bool>> filter)
