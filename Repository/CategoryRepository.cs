@@ -27,9 +27,17 @@ namespace backend_core.Repository
         public async Task<List<Category>> GetAllWithInclude(QueryObject query)
         {
 
-            var categories =  _db.categories.Include(c => c.Skills).AsQueryable();
-            if(!string.IsNullOrWhiteSpace(query.Name)) {
+            var categories = _db.categories.Include(c => c.Skills).AsQueryable();
+            if (!string.IsNullOrWhiteSpace(query.Name))
+            {
                 categories = categories.Where(n => n.Name.Contains(query.Name));
+            }
+            if (!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                if (query.SortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    categories = query.IsDescending ? categories.OrderByDescending(n => n.Name) : categories.OrderBy(n => n.Name);
+                }
             }
 
             return await categories.ToListAsync();
