@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using backend_core.Data;
 using backend_core.DTOs.Category;
+using backend_core.Helpers;
 using backend_core.Interfaces;
 using backend_core.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace backend_core.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
             // var categories =  await _categoryRepo.GetAll();
             var categories =  await _categoryRepo.GetAllWithInclude();
@@ -45,6 +46,7 @@ namespace backend_core.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCategoryRequestDTO CategoryDTO)
         {
+            if(!ModelState.IsValid) return BadRequest(ModelState);
             var categoryModel = CategoryDTO.ToCategoryCreateDTO();
             await _categoryRepo.Create(categoryModel);
             await _categoryRepo.Save();
@@ -54,6 +56,7 @@ namespace backend_core.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateCategoryRequestDTO CategoryDTO)
         {
+            if(!ModelState.IsValid) return BadRequest(ModelState);
             var Category = await _categoryRepo.Get(c => c.Id == id);
             if (Category == null)
             {
