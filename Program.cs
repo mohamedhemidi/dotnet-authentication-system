@@ -2,6 +2,7 @@ using backend_core.Data;
 using backend_core.Interfaces;
 using backend_core.Models;
 using backend_core.Repository;
+using backend_core.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
