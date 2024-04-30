@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using backend_core.Data;
+using backend_core.Helpers;
 using backend_core.Interfaces;
 using backend_core.Models;
 using Microsoft.EntityFrameworkCore;
@@ -23,9 +24,15 @@ namespace backend_core.Repository
             return await _db.categories.AnyAsync(c => c.Id == id);
         }
 
-        public async Task<List<Category>> GetAllWithInclude()
+        public async Task<List<Category>> GetAllWithInclude(QueryObject query)
         {
-            return await _db.categories.Include(c => c.Skills).ToListAsync();
+
+            var categories =  _db.categories.Include(c => c.Skills).AsQueryable();
+            if(!string.IsNullOrWhiteSpace(query.Name)) {
+                categories = categories.Where(n => n.Name.Contains(query.Name));
+            }
+
+            return await categories.ToListAsync();
         }
 
         public async Task<Category> GetWithInclude(Expression<Func<Category, bool>> filter)
