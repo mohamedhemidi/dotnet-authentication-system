@@ -18,12 +18,12 @@ namespace backend_core.Api.Controllers
         [HttpPost("register")]
         public IActionResult Register(RegisterRequest request)
         {
-            var registerResult = _accountService.Register(request.Email, request.Username, request.Password);
+            var registerResult = _accountService.Register(request.Username, request.Email, request.Password);
 
             var response = new AccountResponse(
                 registerResult.Id,
-                registerResult.Email,
                 registerResult.Username,
+                registerResult.Email,
                 registerResult.Token
             );
             return Ok(response);
