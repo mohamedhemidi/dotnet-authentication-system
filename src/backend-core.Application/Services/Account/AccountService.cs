@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using backend_core.Application.Common.Interfaces.Authentication;
 using backend_core.Application.Common.Interfaces.Persistence;
+using backend_core.Domain.Common.Errors;
 using backend_core.Domain.Entities;
+using ErrorOr;
 
 namespace backend_core.Application.Services.Account
 {
@@ -17,12 +19,12 @@ namespace backend_core.Application.Services.Account
             _jwtTokenGenerator = jwtTokenGenerator;
             _userRepository = userRepository;
         }
-        public AccountResult Register(string username, string email, string password)
+        public ErrorOr<AccountResult> Register(string username, string email, string password)
         {
             // Check if User Exists:
             if (_userRepository.GetUserByEmail(email) is not null)
             {
-                throw new Exception("User with give email already exists");
+                return Errors.User.DuplicateEmail;
             }
             // Create user (Generate unique ID):
             var newUser = new User
@@ -40,17 +42,17 @@ namespace backend_core.Application.Services.Account
 
             return new AccountResult(newUser.Id, newUser.Username, newUser.Email, token);
         }
-        public AccountResult Login(string email, string password)
+        public ErrorOr<AccountResult> Login(string email, string password)
         {
             // 1. Validate if User does Exist
             if (_userRepository.GetUserByEmail(email) is not User user)
             {
-                throw new Exception("Provided Email does not exist in our records");
+                return Errors.Authentication.InvalidCredentials;
             }
             // 2. Validate if Password Is Correct
             if (user.Password != password)
             {
-                throw new Exception("Invalide Credentials");
+                return Errors.Authentication.InvalidCredentials;
             }
             // 3. Create JWT Token
 

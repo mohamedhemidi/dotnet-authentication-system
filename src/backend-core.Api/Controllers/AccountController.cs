@@ -1,12 +1,12 @@
 using backend_core.Application.Services.Account;
 using backend_core.Contracts.Account;
 using Microsoft.AspNetCore.Mvc;
+using ErrorOr;
 
 namespace backend_core.Api.Controllers
 {
-    [ApiController]
     [Route("api/account")]
-    public class AccountController : ControllerBase
+    public class AccountController : ApiController
     {
         private readonly IAccountService _accountService;
 
@@ -18,27 +18,34 @@ namespace backend_core.Api.Controllers
         [HttpPost("register")]
         public IActionResult Register(RegisterRequest request)
         {
-            var registerResult = _accountService.Register(request.Username, request.Email, request.Password);
+            ErrorOr<AccountResult> registerResult = _accountService.Register(request.Username, request.Email, request.Password);
 
-            var response = new AccountResponse(
-                registerResult.Id,
-                registerResult.Username,
-                registerResult.Email,
-                registerResult.Token
+            return registerResult.Match(
+                registerResult => Ok(MapAuthResult(registerResult)),
+               errors => Problem(errors)
             );
-            return Ok(response);
+
         }
+
         [HttpPost("login")]
         public IActionResult Login(LoginRequest request)
         {
             var loginResult = _accountService.Login(request.Email, request.Password);
-            var response = new AccountResponse(
-                loginResult.Id,
-                loginResult.Email,
-                loginResult.Username,
-                loginResult.Token
+            return loginResult.Match(
+                loginResult => Ok(MapAuthResult(loginResult)),
+               errors => Problem(errors)
             );
-            return Ok(response);
+        }
+
+
+        private static AccountResponse MapAuthResult(AccountResult registerResult)
+        {
+            return new AccountResponse(
+                            registerResult.Id,
+                            registerResult.Username,
+                            registerResult.Email,
+                            registerResult.Token
+                        );
         }
     }
 }
