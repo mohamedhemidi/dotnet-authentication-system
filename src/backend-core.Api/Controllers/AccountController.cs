@@ -1,24 +1,29 @@
-using backend_core.Application.Services.Account;
 using backend_core.Contracts.Account;
 using Microsoft.AspNetCore.Mvc;
 using ErrorOr;
+using MediatR;
+using backend_core.Application;
+using backend_core.Application.Account.Queries.Login;
+using backend_core.Application.Account.Common;
 
 namespace backend_core.Api.Controllers
 {
     [Route("api/account")]
     public class AccountController : ApiController
     {
-        private readonly IAccountService _accountService;
-
-        public AccountController(IAccountService accountService)
+        private readonly ISender _mediator;
+        public AccountController(ISender mediator)
         {
-            _accountService = accountService;
+            _mediator = mediator;
         }
 
         [HttpPost("register")]
-        public IActionResult Register(RegisterRequest request)
+        public async Task<IActionResult> RegisterAsync(RegisterRequest request)
         {
-            ErrorOr<AccountResult> registerResult = _accountService.Register(request.Username, request.Email, request.Password);
+            var command = new RegisterCommand(request.Username, request.Email, request.Password);
+            ErrorOr<AccountResult> registerResult = await _mediator.Send(command);
+
+
 
             return registerResult.Match(
                 registerResult => Ok(MapAuthResult(registerResult)),
@@ -28,9 +33,10 @@ namespace backend_core.Api.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LoginRequest request)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
-            var loginResult = _accountService.Login(request.Email, request.Password);
+            var query = new LoginQuery(request.Email, request.Password);
+            var loginResult = await _mediator.Send(query);
             return loginResult.Match(
                 loginResult => Ok(MapAuthResult(loginResult)),
                errors => Problem(errors)
@@ -38,13 +44,13 @@ namespace backend_core.Api.Controllers
         }
 
 
-        private static AccountResponse MapAuthResult(AccountResult registerResult)
+        private static AccountResponse MapAuthResult(AccountResult authResult)
         {
             return new AccountResponse(
-                            registerResult.Id,
-                            registerResult.Username,
-                            registerResult.Email,
-                            registerResult.Token
+                            authResult.User.Id,
+                            authResult.User.Username,
+                            authResult.User.Email,
+                            authResult.Token
                         );
         }
     }
