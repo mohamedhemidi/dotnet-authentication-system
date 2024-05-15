@@ -1,6 +1,6 @@
 ﻿using backend_core.Application.Common.Interfaces.Authentication;
-using backend_core.Application.Common.Interfaces.Persistence;
 using backend_core.Application.Common.Interfaces.Services;
+using backend_core.Application.Contracts.Persistance;
 using backend_core.Infrastructure.Authentication;
 using backend_core.Infrastructure.Persistence;
 using backend_core.Infrastructure.Services;

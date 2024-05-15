@@ -1,8 +1,6 @@
 ﻿using System.Reflection;
-using backend_core.Application.Account.Commands.Register;
-using backend_core.Application.Account.Common;
+using backend_core.Application.Modules.Account.Commands.Register;
 using backend_core.Application.Common.Behaviours;
-using ErrorOr;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +18,7 @@ public static class DependencyInjection
 
         // FluentValidation :
         services.AddScoped(
-            typeof(IPipelineBehavior<,>), 
+            typeof(IPipelineBehavior<,>),
             typeof(ValidationBehaviour<,>));
         // services.AddScoped<IPipelineBehavior<RegisterCommand, ErrorOr<AccountResult>>, ValidationBehaviour<RegisterCommand, ErrorOr<AccountResult>>>();
 

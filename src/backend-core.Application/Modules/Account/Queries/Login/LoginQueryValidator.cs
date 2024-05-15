@@ -4,14 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
 
-namespace backend_core.Application.Account.Queries.Login
+namespace backend_core.Application.Modules.Account.Queries.Login
 {
     public class LoginQueryValidator : AbstractValidator<LoginQuery>
     {
         public LoginQueryValidator()
         {
-            RuleFor(x => x.Email).NotEmpty();
-            RuleFor(x => x.Password).NotEmpty();
+            RuleFor(x => x.loginDTO.Email).NotEmpty();
+            RuleFor(x => x.loginDTO.Password).NotEmpty();
         }
     }
 }
