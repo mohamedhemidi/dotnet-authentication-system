@@ -1,4 +1,3 @@
-using backend_core.Contracts.Account;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using backend_core.Application;

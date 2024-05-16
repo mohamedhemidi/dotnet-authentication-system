@@ -3,6 +3,7 @@ using backend_core.Domain.Entities;
 using MediatR;
 using backend_core.Application.Contracts.Persistance;
 using backend_core.Application.DTOs;
+using backend_core.Application.Modules.Account.Commands.Register;
 
 namespace backend_core.Application.Modules.Account;
 
@@ -18,6 +19,13 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
     }
     public async Task<AccountResultDTO> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
+        // Data Validation :
+
+        var validator = new RegisterCommandValidator();
+        var validationResult = await validator.ValidateAsync(command.registerDTO);
+        if (validationResult.IsValid == false)
+            throw new Exception();
+
         // Check if User Exists:
 
         // Create user (Generate unique ID):
