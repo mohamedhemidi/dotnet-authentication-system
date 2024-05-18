@@ -7,7 +7,7 @@ using backend_core.Domain.Common.Errors;
 using backend_core.Domain.Entities;
 using MediatR;
 using backend_core.Application.Contracts.Persistance;
-using backend_core.Application.DTOs;
+using backend_core.Application.DTOs.Account;
 
 namespace backend_core.Application.Modules.Account.Queries.Login
 {
@@ -24,6 +24,12 @@ namespace backend_core.Application.Modules.Account.Queries.Login
 
         public async Task<AccountResultDTO> Handle(LoginQuery query, CancellationToken cancellationToken)
         {
+            // Data Validation :
+
+        var validator = new LoginQueryValidator();
+        var validationResult = await validator.ValidateAsync(query.loginDTO);
+        if (validationResult.IsValid == false)
+            throw new Exception();
 
             // 1. Validate if User does Exist
             var user = await _userRepository.Get(x => x.Email == query.loginDTO.Email);

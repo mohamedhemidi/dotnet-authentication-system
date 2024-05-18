@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using backend_core.Application;
 using backend_core.Application.Modules.Account.Queries.Login;
+using backend_core.Application.DTOs.Account;
 using backend_core.Application.DTOs;
 
 namespace backend_core.Api.Controllers

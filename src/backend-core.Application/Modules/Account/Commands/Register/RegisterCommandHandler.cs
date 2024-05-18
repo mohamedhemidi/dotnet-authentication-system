@@ -2,7 +2,7 @@
 using backend_core.Domain.Entities;
 using MediatR;
 using backend_core.Application.Contracts.Persistance;
-using backend_core.Application.DTOs;
+using backend_core.Application.DTOs.Account;
 using backend_core.Application.Modules.Account.Commands.Register;
 
 namespace backend_core.Application.Modules.Account;
@@ -31,8 +31,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
         // Create user (Generate unique ID):
         var newUser = new User
         {
-            Username = command.registerDTO.Username,
             Email = command.registerDTO.Email,
+            Username = command.registerDTO.Username,
             Password = command.registerDTO.Password
         };
 
@@ -41,7 +41,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
 
         var token = _jwtTokenGenerator.GenerateToken(newUser.Id, newUser.Username, newUser.Email);
 
-        return new AccountResultDTO(newUser.Id, newUser.Username, newUser.Email, token);
+        return new AccountResultDTO(newUser.Id, newUser.Email, newUser.Username, token);
         // return MapAuthResult(newUser, token);
     }
     // private static AccountResultDTO MapAuthResult(User authResult, string Token)
