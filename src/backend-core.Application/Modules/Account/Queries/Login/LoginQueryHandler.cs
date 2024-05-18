@@ -8,6 +8,7 @@ using backend_core.Domain.Entities;
 using MediatR;
 using backend_core.Application.Contracts.Persistance;
 using backend_core.Application.DTOs.Account;
+using backend_core.Application.Common.Exceptions;
 
 namespace backend_core.Application.Modules.Account.Queries.Login
 {
@@ -26,21 +27,21 @@ namespace backend_core.Application.Modules.Account.Queries.Login
         {
             // Data Validation :
 
-        var validator = new LoginQueryValidator();
-        var validationResult = await validator.ValidateAsync(query.loginDTO);
-        if (validationResult.IsValid == false)
-            throw new Exception();
+            var validator = new LoginQueryValidator();
+            var validationResult = await validator.ValidateAsync(query.loginDTO);
+            if (validationResult.IsValid == false)
+                throw new ValidationException(validationResult);
 
             // 1. Validate if User does Exist
             var user = await _userRepository.Get(x => x.Email == query.loginDTO.Email);
             if (user == null)
             {
-                throw new Exception("User Not Found");
+                throw new NotFoundException(nameof(user), query.loginDTO.Email);
             }
             //// 2. Validate if Password Is Correct
             if (user.Password != query.loginDTO.Password)
             {
-                throw new Exception("Credentials Does Not Match");
+                throw new BadRequestException("Credentials Does Not Match");
             }
             //// 3. Create JWT Token
 

@@ -4,6 +4,7 @@ using MediatR;
 using backend_core.Application.Contracts.Persistance;
 using backend_core.Application.DTOs.Account;
 using backend_core.Application.Modules.Account.Commands.Register;
+using backend_core.Application.Common.Exceptions;
 
 namespace backend_core.Application.Modules.Account;
 
@@ -24,7 +25,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
         var validator = new RegisterCommandValidator();
         var validationResult = await validator.ValidateAsync(command.registerDTO);
         if (validationResult.IsValid == false)
-            throw new Exception();
+            throw new ValidationException(validationResult);
 
         // Check if User Exists:
 
