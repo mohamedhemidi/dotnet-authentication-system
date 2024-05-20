@@ -14,10 +14,13 @@ namespace backend_core.Infrastructure.Persistence.Data
         {
 
         }
+         public DbSet<User> users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
             base.OnModelCreating(modelBuilder);
         }
+
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             foreach (var entry in base.ChangeTracker.Entries<BaseDomainEntity>()
@@ -35,6 +38,6 @@ namespace backend_core.Infrastructure.Persistence.Data
 
             return result;
         }
-        public DbSet<User> users { get; set; }
+       
     }
 }
