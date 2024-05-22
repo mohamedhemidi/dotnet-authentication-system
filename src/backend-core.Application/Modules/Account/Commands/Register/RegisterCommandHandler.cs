@@ -41,14 +41,15 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
             Password = command.registerDTO.Password
         };
 
-        await _userRepository.Create(newUser);
+         await _userRepository.Create(newUser);
         // Create JWT Token:
 
+        await _userRepository.Save();
         var token = _jwtTokenGenerator.GenerateToken(newUser.Id, newUser.Username, newUser.Email);
 
         var email = new Email
         {
-            To = "mail@mail.com",
+            To = "mohamed.hemidi@hotmail.com",
             Body = $"Account with email {newUser.Email} is successfully created on data {newUser.Created_at:D}!",
             Subject = "Account created"
         };

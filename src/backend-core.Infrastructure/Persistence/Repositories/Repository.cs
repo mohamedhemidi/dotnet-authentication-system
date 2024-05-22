@@ -12,7 +12,6 @@ namespace backend_core.Infrastructure.Persistence.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private static readonly List<T> _users = new();
         private readonly ApplicationDbContext _db;
         internal DbSet<T> dbSet;
         public Repository(ApplicationDbContext db)
@@ -22,17 +21,17 @@ namespace backend_core.Infrastructure.Persistence.Repositories
         }
         public async Task Create(T entity)
         {
-            await dbSet.AddAsync(entity);
+            await _db.AddAsync(entity);
         }
 
         public void Delete(T entity)
         {
-            dbSet.Remove(entity);
+            _db.Remove(entity);
         }
 
         public void DeleteRange(IEnumerable<T> entity)
         {
-            dbSet.RemoveRange(entity);
+            _db.RemoveRange(entity);
         }
 
         public async Task<T> Get(Expression<Func<T, bool>> filter)
@@ -46,6 +45,10 @@ namespace backend_core.Infrastructure.Persistence.Repositories
         {
             IQueryable<T> query = dbSet;
             return await query.ToListAsync();
+        }
+        public async Task Save()
+        {
+           await _db.SaveChangesAsync();
         }
     }
 }
