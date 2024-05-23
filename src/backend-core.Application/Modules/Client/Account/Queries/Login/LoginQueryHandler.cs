@@ -9,6 +9,7 @@ using MediatR;
 using backend_core.Application.Contracts.Persistance;
 using backend_core.Application.DTOs.Account;
 using backend_core.Application.Common.Exceptions;
+using backend_core.Application.Modules.Client.Account.Queries.Login;
 
 namespace backend_core.Application.Modules.Account.Queries.Login
 {

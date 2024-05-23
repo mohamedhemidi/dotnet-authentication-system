@@ -2,7 +2,7 @@
 using backend_core.Application.DTOs.Account;
 using MediatR;
 
-namespace backend_core.Application;
+namespace backend_core.Application.Modules.Client.Account;
 
 public record RegisterCommand(
     RegisterDTO registerDTO

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace backend_core.Api.Controllers
 {
     [ApiController]
-    public class ApiController : ControllerBase
+    public class BaseController : ControllerBase
     {
         protected IActionResult Problem(List<Error> errors)
         {

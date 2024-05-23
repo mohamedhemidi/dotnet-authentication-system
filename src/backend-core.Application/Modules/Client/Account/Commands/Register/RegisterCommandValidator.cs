@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using backend_core.Application.DTOs;
-using backend_core.Application.DTOs.Account;
 using backend_core.Application.DTOs.Account.Validators;
 using FluentValidation;
 
-namespace backend_core.Application.Modules.Account.Commands.Register
+namespace backend_core.Application.Modules.Client.Account.Commands.Register
 {
     public class RegisterCommandValidator : AbstractValidator<RegisterDTO>
     {

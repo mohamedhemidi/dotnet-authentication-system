@@ -4,11 +4,13 @@ using backend_core.Application;
 using backend_core.Application.Modules.Account.Queries.Login;
 using backend_core.Application.DTOs.Account;
 using backend_core.Application.DTOs;
+using backend_core.Application.Modules.Client.Account;
+using backend_core.Application.Modules.Client.Account.Queries.Login;
 
-namespace backend_core.Api.Controllers
+namespace backend_core.Api.Controllers.Client
 {
     [Route("api/account")]
-    public class AccountController : ApiController
+    public class AccountController : BaseController
     {
         private readonly ISender _mediator;
         public AccountController(ISender mediator)

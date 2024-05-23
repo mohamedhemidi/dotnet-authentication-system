@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using backend_core.Application.Modules.Account.Commands.Register;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

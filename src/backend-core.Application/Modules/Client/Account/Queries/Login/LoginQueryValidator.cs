@@ -6,7 +6,7 @@ using backend_core.Application.DTOs.Account;
 using backend_core.Application.DTOs.Account.Validators;
 using FluentValidation;
 
-namespace backend_core.Application.Modules.Account.Queries.Login
+namespace backend_core.Application.Modules.Client.Account.Queries.Login
 {
     public class LoginQueryValidator : AbstractValidator<LoginDTO>
     {
