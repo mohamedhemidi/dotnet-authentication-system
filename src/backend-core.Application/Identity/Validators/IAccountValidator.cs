@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Internal;
 
-namespace backend_core.Application.DTOs.Account.Validators
+namespace backend_core.Application.Identity.Validators
 {
     public class IAccountValidator : AbstractValidator<IAccountDTO>
     {

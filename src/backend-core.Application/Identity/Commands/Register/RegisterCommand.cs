@@ -1,5 +1,5 @@
-﻿using backend_core.Application.DTOs;
-using backend_core.Application.DTOs.Account;
+﻿using backend_core.Application.Identity.DTOs;
+using backend_core.Application.Identity.DTOs.Account;
 using MediatR;
 
 namespace backend_core.Application.Modules.Client.Account;

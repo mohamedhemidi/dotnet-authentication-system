@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace backend_core.Application.Common.Interfaces.Authentication
+namespace backend_core.Application.Identity.Interfaces
 {
     public interface IJwtTokenGenerator
     {

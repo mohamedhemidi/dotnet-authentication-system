@@ -5,8 +5,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using backend_core.Application.Common.Interfaces.Authentication;
+using backend_core.Application.Identity.Interfaces;
 using backend_core.Application.Common.Interfaces.Services;
+using backend_core.Application.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
