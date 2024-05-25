@@ -10,6 +10,7 @@ using backend_core.Application.Common.Interfaces.Services;
 using backend_core.Application.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using backend_core.Domain.Entities;
 
 namespace backend_core.Infrastructure.Authentication
 {
@@ -23,13 +24,13 @@ namespace backend_core.Infrastructure.Authentication
             _dateTimeProvider = dateTimeProvider;
             _jwtSettings = jwtOptions.Value;
         }
-        public string GenerateToken(Guid userId, string Username, string Email)
+        public string GenerateToken(User user)
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, Email),
-                new Claim(JwtRegisteredClaimNames.Name, Username)
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Name, user.UserName)
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
 

@@ -11,7 +11,7 @@ using backend_core.Application.Identity.Queries.Login;
 namespace backend_core.Api.Controllers.Client
 {
     [Route("api/account")]
-    public class AccountController : BaseController
+    public class AccountController : ControllerBase
     {
         private readonly ISender _mediator;
         public AccountController(ISender mediator)
@@ -20,7 +20,7 @@ namespace backend_core.Api.Controllers.Client
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterAsync(RegisterDTO request)
+        public async Task<IActionResult> Register([FromBody]RegisterDTO request)
         {
             var command = new RegisterCommand(request);
             AccountResultDTO registerResult = await _mediator.Send(command);
@@ -30,7 +30,7 @@ namespace backend_core.Api.Controllers.Client
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDTO request)
+        public async Task<IActionResult> Login([FromBody] LoginDTO request)
         {
             var query = new LoginQuery(request);
             var loginResult = await _mediator.Send(query);

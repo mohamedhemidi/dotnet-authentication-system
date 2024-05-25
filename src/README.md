@@ -14,7 +14,7 @@ dotnet user-secrets set "EmailSettings" ""
 
 ```sh
 // create migration
-dotnet ef migrations add init -s ./src/backend-core.Api/backend-core.Api.csproj -p ./src/backend-core.Infrastructure/backend-core.Infrastructure.csproj
+dotnet ef migrations add <migration_name> -s ./src/backend-core.Api/backend-core.Api.csproj -p ./src/backend-core.Infrastructure/backend-core.Infrastructure.csproj
 // update database
-dotnet ef database update init -s ./src/backend-core.Api/backend-core.Api.csproj -p ./src/backend-core.Infrastructure/backend-core.Infrastructure.csproj
+dotnet ef database update -s ./src/backend-core.Api/backend-core.Api.csproj -p ./src/backend-core.Infrastructure/backend-core.Infrastructure.csproj
 ```

@@ -10,18 +10,22 @@ using backend_core.Application.Common.Exceptions;
 using backend_core.Application.Modules.Client.Account.Queries.Login;
 using backend_core.Application.Identity.Queries.Login;
 using backend_core.Application.Identity.DTOs.Account;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend_core.Application.Modules.Account.Queries.Login
 {
 
     public class LoginQueryHandler : IRequestHandler<LoginQuery, AccountResultDTO>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signinManager;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
-        public LoginQueryHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
+        public LoginQueryHandler(UserManager<User> userManager, SignInManager<User> signinManager, IJwtTokenGenerator jwtTokenGenerator)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
-            _userRepository = userRepository;
+            _userManager = userManager;
+            _signinManager = signinManager;
         }
 
         public async Task<AccountResultDTO> Handle(LoginQuery query, CancellationToken cancellationToken)
@@ -34,20 +38,27 @@ namespace backend_core.Application.Modules.Account.Queries.Login
                 throw new ValidationException(validationResult);
 
             // 1. Validate if User does Exist
-            var user = await _userRepository.Get(x => x.Email == query.loginDTO.Email);
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == query.loginDTO.Email);
+
             if (user == null)
             {
                 throw new NotFoundException(nameof(user), query.loginDTO.Email);
             }
             //// 2. Validate if Password Is Correct
-            if (user.Password != query.loginDTO.Password)
+            var result = await _signinManager.CheckPasswordSignInAsync(user, query.loginDTO.Password, false);
+            if (!result.Succeeded)
             {
                 throw new BadRequestException("Credentials Does Not Match");
             }
             //// 3. Create JWT Token
 
-            var token = _jwtTokenGenerator.GenerateToken(user.Id, user.Username, user.Email);
-            return new AccountResultDTO(user.Id, user.Username, user.Email, token);
+            var token = _jwtTokenGenerator.GenerateToken(user);
+            return new AccountResultDTO(
+                user.Id,
+                user.UserName,
+                user.Email,
+                token
+            );
         }
     }
 }

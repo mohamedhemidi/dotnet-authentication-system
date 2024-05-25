@@ -13,7 +13,7 @@ namespace backend_core.Application.Modules.Client.Account.Commands.Register
         public RegisterCommandValidator()
         {
             Include(new IAccountValidator());
-            RuleFor(x => x.Username).NotEmpty().WithMessage("{PropertyName} is required").NotNull();
+            RuleFor(x => x.UserName).NotEmpty().WithMessage("{PropertyName} is required").NotNull();
         }
     }
 }

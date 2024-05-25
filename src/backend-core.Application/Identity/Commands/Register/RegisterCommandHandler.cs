@@ -7,20 +7,23 @@ using backend_core.Application.Models;
 using backend_core.Application.Contracts.Infrastructure;
 using backend_core.Application.Modules.Client.Account.Commands.Register;
 using backend_core.Application.Identity.DTOs.Account;
+using Microsoft.AspNetCore.Identity;
 
 namespace backend_core.Application.Modules.Client.Account;
 
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountResultDTO>
 {
-    private readonly IUserRepository _userRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IEmailSender _emailSender;
+    private readonly UserManager<User> _userManager;
+    private readonly SignInManager<User> _signinManager;
 
-    public RegisterCommandHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository, IEmailSender emailSender)
+    public RegisterCommandHandler(UserManager<User> userManager, SignInManager<User> signinManager, IJwtTokenGenerator jwtTokenGenerator, IEmailSender emailSender)
     {
         _jwtTokenGenerator = jwtTokenGenerator;
-        _userRepository = userRepository;
         _emailSender = emailSender;
+        _userManager = userManager;
+        _signinManager = signinManager;
     }
     public async Task<AccountResultDTO> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
@@ -33,37 +36,58 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
 
         // Check if User Exists:
 
-        // Create user (Generate unique ID):
+        // Create user :
         var newUser = new User
         {
             Email = command.registerDTO.Email,
-            Username = command.registerDTO.Username,
-            Password = command.registerDTO.Password
+            UserName = command.registerDTO.UserName,
         };
 
-         await _userRepository.Create(newUser);
-        // Create JWT Token:
+        var createdUser = await _userManager.CreateAsync(newUser, command.registerDTO.Password);
 
-        await _userRepository.Save();
-        var token = _jwtTokenGenerator.GenerateToken(newUser.Id, newUser.Username, newUser.Email);
-
-        var email = new Email
+        if (createdUser.Succeeded)
         {
-            To = "mohamed.hemidi@hotmail.com",
-            Body = $"Account with email {newUser.Email} is successfully created on data {newUser.Created_at:D}!",
-            Subject = "Account created"
-        };
-        try
-        {
-            await _emailSender.SendEmail(email);
+            var roleResult = await _userManager.AddToRoleAsync(newUser, "User");
+            if (roleResult.Succeeded)
+            {
+                var token = _jwtTokenGenerator.GenerateToken(newUser);
+                return
+                    new AccountResultDTO
+                    (
+                       newUser.Id,
+                       newUser.UserName,
+                       newUser.Email,
+                       token
+                    )
+                ;
+            }
+            else
+            {
+                // throw new BadRequestException(roleResult.Errors);
+                throw new BadRequestException("RoleResult.Errors");
+            }
         }
-        catch (System.Exception)
+        else
         {
-
-            throw;
+            throw new BadRequestException("An error Occured");
         }
 
-        return new AccountResultDTO(newUser.Id, newUser.Email, newUser.Username, token);
+        // var email = new Email
+        // {
+        //     To = "mohamed.hemidi@hotmail.com",
+        //     Body = $"Account with email {newUser.Email} is successfully created on data!",
+        //     Subject = "Account created"
+        // };
+        // try
+        // {
+        //     await _emailSender.SendEmail(email);
+        // }
+        // catch (System.Exception)
+        // {
+
+        //     throw;
+        // }
+
         // return MapAuthResult(newUser, token);
     }
     // private static AccountResultDTO MapAuthResult(User authResult, string Token)

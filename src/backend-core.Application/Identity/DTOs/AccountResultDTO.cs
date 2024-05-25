@@ -7,7 +7,7 @@ using backend_core.Domain.Entities;
 namespace backend_core.Application.Identity.DTOs.Account;
 
 public record AccountResultDTO(
-    Guid Id,
+    string Id,
     string Email,
     string Username,
     string Token

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace backend_core.Contracts.Persistance
+namespace backend_core.Application.Contracts.Persistance
 {
     public interface IRepository<T> where T : class
     {
