@@ -16,9 +16,11 @@ namespace backend_core.Infrastructure.Persistence.Data
         {
 
         }
+
+        public DbSet<Post> posts { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
             base.OnModelCreating(modelBuilder);
 
             List<IdentityRole> roles = new List<IdentityRole>

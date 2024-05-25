@@ -7,7 +7,7 @@ using backend_core.Application.Contracts.Persistance;
 using backend_core.Domain.Entities;
 using backend_core.Infrastructure.Persistence.Data;
 
-namespace backend_core.Infrastructure.Persistence.Repositories
+namespace backend_core.Infrastructure.Repositories
 {
     public class UserRepository : Repository<User>, IUserRepository
     {

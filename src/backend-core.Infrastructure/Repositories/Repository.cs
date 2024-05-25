@@ -8,7 +8,7 @@ using backend_core.Domain.Entities;
 using backend_core.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace backend_core.Infrastructure.Persistence.Repositories
+namespace backend_core.Infrastructure.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
@@ -17,7 +17,7 @@ namespace backend_core.Infrastructure.Persistence.Repositories
         public Repository(ApplicationDbContext db)
         {
             _db = db;
-            this.dbSet = _db.Set<T>();
+            dbSet = _db.Set<T>();
         }
         public async Task Create(T entity)
         {
@@ -48,7 +48,7 @@ namespace backend_core.Infrastructure.Persistence.Repositories
         }
         public async Task Save()
         {
-           await _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
         }
     }
 }

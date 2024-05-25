@@ -12,7 +12,7 @@ namespace backend_core.Application.Modules.Client.Account.Queries.Login
     {
         public LoginQueryValidator()
         {
-            Include(new IAccountValidator());
+            Include(new AccountValidator());
         }
 
     }

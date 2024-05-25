@@ -13,7 +13,5 @@ namespace backend_core.Application.Contracts.Persistance
         Task Create(T entity);
         void Delete(T entity);
         void DeleteRange(IEnumerable<T> entity);
-
-        Task Save();
     }
 }

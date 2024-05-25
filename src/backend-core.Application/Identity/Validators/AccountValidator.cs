@@ -7,9 +7,9 @@ using FluentValidation.Internal;
 
 namespace backend_core.Application.Identity.Validators
 {
-    public class IAccountValidator : AbstractValidator<IAccountDTO>
+    public class AccountValidator : AbstractValidator<IAccountDTO>
     {
-        public IAccountValidator()
+        public AccountValidator()
         {
             RuleFor(x => x.Email).NotEmpty().WithMessage("{PropertyName} is required").NotNull().EmailAddress();
             RuleFor(x => x.Password).MinimumLength(6);

@@ -15,15 +15,15 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IEmailSender _emailSender;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
-    private readonly SignInManager<User> _signinManager;
 
-    public RegisterCommandHandler(UserManager<User> userManager, SignInManager<User> signinManager, IJwtTokenGenerator jwtTokenGenerator, IEmailSender emailSender)
+    public RegisterCommandHandler(UserManager<User> userManager, SignInManager<User> signinManager, IJwtTokenGenerator jwtTokenGenerator, IEmailSender emailSender, IUnitOfWork unitOfWork)
     {
         _jwtTokenGenerator = jwtTokenGenerator;
         _emailSender = emailSender;
         _userManager = userManager;
-        _signinManager = signinManager;
+        _unitOfWork = unitOfWork;
     }
     public async Task<AccountResultDTO> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
@@ -43,11 +43,14 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
             UserName = command.registerDTO.UserName,
         };
 
+        await _unitOfWork.StartTransactionAsync(cancellationToken);
+
         var createdUser = await _userManager.CreateAsync(newUser, command.registerDTO.Password);
 
         if (createdUser.Succeeded)
         {
             var roleResult = await _userManager.AddToRoleAsync(newUser, "User");
+            await _unitOfWork.SubmitTransactionAsync(cancellationToken);
             if (roleResult.Succeeded)
             {
                 var token = _jwtTokenGenerator.GenerateToken(newUser);
@@ -64,31 +67,15 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
             else
             {
                 // throw new BadRequestException(roleResult.Errors);
+                await _unitOfWork.RevertTransactionAsync(cancellationToken);
                 throw new BadRequestException("RoleResult.Errors");
             }
         }
         else
         {
+            await _unitOfWork.RevertTransactionAsync(cancellationToken);
             throw new BadRequestException("An error Occured");
         }
-
-        // var email = new Email
-        // {
-        //     To = "mohamed.hemidi@hotmail.com",
-        //     Body = $"Account with email {newUser.Email} is successfully created on data!",
-        //     Subject = "Account created"
-        // };
-        // try
-        // {
-        //     await _emailSender.SendEmail(email);
-        // }
-        // catch (System.Exception)
-        // {
-
-        //     throw;
-        // }
-
-        // return MapAuthResult(newUser, token);
     }
     // private static AccountResultDTO MapAuthResult(User authResult, string Token)
     // {

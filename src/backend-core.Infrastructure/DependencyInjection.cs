@@ -7,7 +7,7 @@ using backend_core.Application.Models;
 using backend_core.Infrastructure.Authentication;
 using backend_core.Infrastructure.Mail;
 using backend_core.Infrastructure.Persistence.Data;
-using backend_core.Infrastructure.Persistence.Repositories;
+using backend_core.Infrastructure.Repositories;
 using backend_core.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,7 +36,9 @@ public static class DependencyInjection
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IPostRepository, PostRepository>();
 
         // Authentication Services:
 
@@ -62,7 +64,6 @@ public static class DependencyInjection
             options.Password.RequiredLength = 12;
         })
         .AddEntityFrameworkStores<ApplicationDbContext>();
-        ;
 
         services.AddAuthentication(options =>
         {
