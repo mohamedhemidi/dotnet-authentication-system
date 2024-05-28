@@ -1,13 +1,12 @@
 ﻿using backend_core.Application.Identity.Interfaces;
 using backend_core.Domain.Entities;
 using MediatR;
-using backend_core.Application.Contracts.Persistance;
+using backend_core.Domain.Repositories;
 using backend_core.Application.Common.Exceptions;
-using backend_core.Application.Models;
-using backend_core.Application.Contracts.Infrastructure;
 using backend_core.Application.Modules.Client.Account.Commands.Register;
 using backend_core.Application.Identity.DTOs.Account;
 using Microsoft.AspNetCore.Identity;
+using backend_core.Domain.Interfaces;
 
 namespace backend_core.Application.Modules.Client.Account;
 

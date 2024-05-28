@@ -50,19 +50,19 @@ namespace backend_core.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "67625991-0809-468c-9302-ef58525e92d8",
+                            Id = "d7e3f3b0-5b02-4f83-a3d5-8dbd9d08d66c",
                             Name = "Super Admin",
                             NormalizedName = "SUPER_ADMIN"
                         },
                         new
                         {
-                            Id = "4c4b83bb-400e-4f9d-8133-1430b8e113e1",
+                            Id = "5951f0a2-68f8-4db4-aa1e-27cd053766e9",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "a48ca5cd-4c51-4c71-97ba-099fd95d5980",
+                            Id = "3fe8e0f7-a63e-4673-8fd6-2f28557fd391",
                             Name = "User",
                             NormalizedName = "USER"
                         });

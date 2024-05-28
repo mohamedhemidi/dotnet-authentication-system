@@ -1,3 +1,4 @@
+using backend_core.Api.Middleware;
 using backend_core.Application;
 using backend_core.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
+    app.UseMiddleware<ExceptionMiddleware>();
     app.UseExceptionHandler("/error");
     app.UseHttpsRedirection();
     app.UseAuthorization();

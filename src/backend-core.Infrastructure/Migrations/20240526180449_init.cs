@@ -72,6 +72,26 @@ namespace backend_core.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "posts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Title = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Body = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Updated_at = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Created_by = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Updated_by = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_posts", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -203,9 +223,9 @@ namespace backend_core.Infrastructure.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "7c8f5820-ecca-42b8-becd-f91a804a8352", null, "User", "USER" },
-                    { "c499c00c-da8a-427f-8131-64d6fef110a1", null, "Admin", "ADMIN" },
-                    { "f7672747-09b1-4418-9cb3-eddbce2e3959", null, "Super Admin", "SUPER_ADMIN" }
+                    { "3fe8e0f7-a63e-4673-8fd6-2f28557fd391", null, "User", "USER" },
+                    { "5951f0a2-68f8-4db4-aa1e-27cd053766e9", null, "Admin", "ADMIN" },
+                    { "d7e3f3b0-5b02-4f83-a3d5-8dbd9d08d66c", null, "Super Admin", "SUPER_ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -263,6 +283,9 @@ namespace backend_core.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "posts");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

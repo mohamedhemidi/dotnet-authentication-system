@@ -12,7 +12,7 @@ using backend_core.Infrastructure.Persistence.Data;
 namespace backend_core.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240524225110_init")]
+    [Migration("20240526180449_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -53,19 +53,19 @@ namespace backend_core.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f7672747-09b1-4418-9cb3-eddbce2e3959",
+                            Id = "d7e3f3b0-5b02-4f83-a3d5-8dbd9d08d66c",
                             Name = "Super Admin",
                             NormalizedName = "SUPER_ADMIN"
                         },
                         new
                         {
-                            Id = "c499c00c-da8a-427f-8131-64d6fef110a1",
+                            Id = "5951f0a2-68f8-4db4-aa1e-27cd053766e9",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "7c8f5820-ecca-42b8-becd-f91a804a8352",
+                            Id = "3fe8e0f7-a63e-4673-8fd6-2f28557fd391",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -175,6 +175,37 @@ namespace backend_core.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("backend_core.Domain.Entities.Post", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("Created_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("Created_by")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("Updated_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("Updated_by")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("posts");
                 });
 
             modelBuilder.Entity("backend_core.Domain.Entities.User", b =>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using backend_core.Application.Common.Exceptions;
-using backend_core.Application.Contracts.Persistance;
+using backend_core.Domain.Repositories;
 using backend_core.Application.Identity;
 using backend_core.Application.Posts.DTOs;
 using backend_core.Domain.Entities;

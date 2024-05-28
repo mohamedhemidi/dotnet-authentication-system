@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using backend_core.Domain.Common;
 using backend_core.Domain.Entities;
+using backend_core.Infrastructure.Configurations.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -18,30 +19,12 @@ namespace backend_core.Infrastructure.Persistence.Data
         }
 
         public DbSet<Post> posts { get; set; }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            List<IdentityRole> roles = new List<IdentityRole>
-            {
-                new IdentityRole
-                {
-                    Name= "Super Admin",
-                    NormalizedName= "SUPER_ADMIN"
-                },
-                new IdentityRole
-                {
-                    Name= "Admin",
-                    NormalizedName= "ADMIN"
-                },
-                new IdentityRole
-                {
-                    Name= "User",
-                    NormalizedName= "USER"
-                }
-            };
-            modelBuilder.Entity<IdentityRole>().HasData(roles);
+            // Seed User Roles: 
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -61,6 +44,6 @@ namespace backend_core.Infrastructure.Persistence.Data
 
             return result;
         }
-       
+
     }
 }

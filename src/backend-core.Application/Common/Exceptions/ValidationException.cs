@@ -8,7 +8,7 @@ namespace backend_core.Application.Common.Exceptions
 {
     public class ValidationException : ApplicationException
     {
-        private List<string> Errors { get; set; }
+        public List<string> Errors { get; set; }
         public ValidationException(ValidationResult validationResult)
         {
             foreach (var error in validationResult.Errors)

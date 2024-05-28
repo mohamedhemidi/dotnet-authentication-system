@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using backend_core.Application.Identity.Interfaces;
 using backend_core.Domain.Entities;
 using MediatR;
-using backend_core.Application.Contracts.Persistance;
+using backend_core.Domain.Repositories;
 using backend_core.Application.Common.Exceptions;
 using backend_core.Application.Modules.Client.Account.Queries.Login;
 using backend_core.Application.Identity.Queries.Login;

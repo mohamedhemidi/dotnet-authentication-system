@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using backend_core.Domain.Entities;
 
-namespace backend_core.Application.Contracts.Persistance
+namespace backend_core.Domain.Repositories
 {
     public interface IUnitOfWork : IDisposable
     {
