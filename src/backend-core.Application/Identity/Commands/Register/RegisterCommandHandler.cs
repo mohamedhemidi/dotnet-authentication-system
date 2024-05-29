@@ -57,8 +57,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
                     new AccountResultDTO
                     (
                        newUser.Id,
-                       newUser.UserName,
                        newUser.Email,
+                       newUser.UserName,
                        token
                     )
                 ;
@@ -67,7 +67,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
             {
                 // throw new BadRequestException(roleResult.Errors);
                 await _unitOfWork.RevertTransactionAsync(cancellationToken);
-                throw new BadRequestException("RoleResult.Errors");
+                throw new BadRequestException(createdUser.Errors.ToString());
             }
         }
         else

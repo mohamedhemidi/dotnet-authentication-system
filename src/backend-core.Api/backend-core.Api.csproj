@@ -10,7 +10,6 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\backend-core.Contracts\backend-core.Contracts.csproj" />
     <ProjectReference Include="..\backend-core.Application\backend-core.Application.csproj" />
     <ProjectReference Include="..\backend-core.Infrastructure\backend-core.Infrastructure.csproj" />
   </ItemGroup>
