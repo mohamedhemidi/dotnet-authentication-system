@@ -35,7 +35,7 @@ namespace backend_core.Application.Modules.Account.Queries.Login
             var validator = new LoginQueryValidator();
             var validationResult = await validator.ValidateAsync(query.loginDTO);
             if (validationResult.IsValid == false)
-                throw new ValidationException(validationResult);
+                throw new FluentValidationException(validationResult);
 
             // 1. Validate if User does Exist
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == query.loginDTO.Email);

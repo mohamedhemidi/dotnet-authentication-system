@@ -13,7 +13,12 @@ namespace backend_core.Application.Modules.Client.Account.Commands.Register
         public RegisterCommandValidator()
         {
             Include(new AccountValidator());
-            RuleFor(x => x.UserName).NotEmpty().WithMessage("{PropertyName} is required").NotNull();
+            RuleFor(x => x.UserName)
+            .NotEmpty()
+            .WithMessage("{PropertyName} is required")
+            .NotNull()
+            .Matches("^[a-zA-Z]+$")
+            .WithMessage("Username must contain only letters without any whitespace, digits, or non-alphanumeric characters.");
         }
     }
 }

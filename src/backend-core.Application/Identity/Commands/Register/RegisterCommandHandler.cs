@@ -17,7 +17,12 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
 
-    public RegisterCommandHandler(UserManager<User> userManager, SignInManager<User> signinManager, IJwtTokenGenerator jwtTokenGenerator, IEmailSender emailSender, IUnitOfWork unitOfWork)
+    public RegisterCommandHandler(
+        UserManager<User> userManager, 
+        SignInManager<User> signinManager, 
+        IJwtTokenGenerator jwtTokenGenerator, 
+        IEmailSender emailSender, 
+        IUnitOfWork unitOfWork)
     {
         _jwtTokenGenerator = jwtTokenGenerator;
         _emailSender = emailSender;
@@ -29,9 +34,9 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
         // Data Validation :
 
         var validator = new RegisterCommandValidator();
-        var validationResult = await validator.ValidateAsync(command.registerDTO);
+        var validationResult = await validator.ValidateAsync(command.registerDTO, cancellationToken);
         if (validationResult.IsValid == false)
-            throw new ValidationException(validationResult);
+            throw new FluentValidationException(validationResult);
 
         // Check if User Exists:
 
@@ -72,17 +77,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
         }
         else
         {
-            await _unitOfWork.RevertTransactionAsync(cancellationToken);
-            throw new BadRequestException("An error Occured");
+            // await _unitOfWork.RevertTransactionAsync(cancellationToken);
+            throw new BadRequestException("An error occured!");
         }
     }
-    // private static AccountResultDTO MapAuthResult(User authResult, string Token)
-    // {
-    //     return new AccountResultDTO(
-    //                     authResult.Id,
-    //                     authResult.Username,
-    //                     authResult.Email,
-    //                     Token
-    //                 );
-    // }
 }

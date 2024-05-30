@@ -30,7 +30,7 @@ namespace backend_core.Application.Posts.Commands.CreatePost
             var validator = new CreatePostCommandValidator();
             var validationResult = await validator.ValidateAsync(command);
             if (validationResult.IsValid == false)
-                throw new ValidationException(validationResult);
+                throw new FluentValidationException(validationResult);
 
             // Create new Post :
 
