@@ -14,24 +14,13 @@ namespace backend_core.Application.Posts.Commands.CreatePost
     public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, PostDTO>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly CurrentUser _currentUser;
 
-        public CreatePostCommandHandler(IUnitOfWork unitOfWork, CurrentUser currentUser)
+        public CreatePostCommandHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _currentUser = currentUser;
         }
         public async Task<PostDTO> Handle(CreatePostCommand command, CancellationToken cancellationToken)
         {
-            // Data Validation :
-
-            var user = _currentUser.UserId;
-
-            var validator = new CreatePostCommandValidator();
-            var validationResult = await validator.ValidateAsync(command);
-            if (validationResult.IsValid == false)
-                throw new FluentValidationException(validationResult);
-
             // Create new Post :
 
             var newPost = new Post

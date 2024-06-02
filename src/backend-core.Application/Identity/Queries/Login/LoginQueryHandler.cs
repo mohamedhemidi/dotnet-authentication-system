@@ -30,12 +30,6 @@ namespace backend_core.Application.Modules.Account.Queries.Login
 
         public async Task<AccountResultDTO> Handle(LoginQuery query, CancellationToken cancellationToken)
         {
-            // Data Validation :
-
-            var validator = new LoginQueryValidator();
-            var validationResult = await validator.ValidateAsync(query.loginDTO);
-            if (validationResult.IsValid == false)
-                throw new FluentValidationException(validationResult);
 
             // 1. Validate if User does Exist
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == query.loginDTO.Email);

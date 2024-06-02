@@ -10,8 +10,17 @@ namespace backend_core.Application.Posts.Commands.CreatePost
     {
         public CreatePostCommandValidator()
         {
-            RuleFor(x => x.createPostDTO.Title).NotEmpty().WithMessage("{PropertyName} is required").NotNull();
-            RuleFor(x => x.createPostDTO.Body).NotEmpty().WithMessage("{PropertyName} is required").NotNull();
+            RuleFor(x => x.createPostDTO.Title)
+            .NotEmpty()
+            .WithMessage("{PropertyName} is required")
+            .NotNull()
+            .OverridePropertyName("Title");
+            
+            RuleFor(x => x.createPostDTO.Body)
+            .NotEmpty()
+            .WithMessage("{PropertyName} is required")
+            .NotNull()
+            .OverridePropertyName("Body");
         }
     }
 }

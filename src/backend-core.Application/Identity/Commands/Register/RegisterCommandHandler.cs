@@ -19,7 +19,6 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
 
     public RegisterCommandHandler(
         UserManager<User> userManager, 
-        SignInManager<User> signinManager, 
         IJwtTokenGenerator jwtTokenGenerator, 
         IEmailSender emailSender, 
         IUnitOfWork unitOfWork)
@@ -31,12 +30,6 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
     }
     public async Task<AccountResultDTO> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
-        // Data Validation :
-
-        var validator = new RegisterCommandValidator();
-        var validationResult = await validator.ValidateAsync(command.registerDTO, cancellationToken);
-        if (validationResult.IsValid == false)
-            throw new FluentValidationException(validationResult);
 
         // Check if User Exists:
 

@@ -30,6 +30,7 @@ namespace backend_core.Api.Middleware
         }
         private static Task HandleValidationExceptionAsync(HttpContext context, ValidationException ex)
         {
+
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
 
@@ -73,7 +74,7 @@ namespace backend_core.Api.Middleware
             var exceptionResult = JsonConvert.SerializeObject(errorResult);
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int) errorResult.status;
+            context.Response.StatusCode = (int)errorResult.status;
 
             return context.Response.WriteAsync(exceptionResult);
         }

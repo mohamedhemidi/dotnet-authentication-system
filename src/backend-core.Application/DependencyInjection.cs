@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using backend_core.Application.Common.Behaviors;
 using backend_core.Application.Identity;
 using FluentValidation;
 using MediatR;
@@ -13,6 +14,9 @@ public static class DependencyInjection
         // services.AddMediatR(typeof(DependencyInjection).Assembly);
         // Version 12:
         services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
+
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehaviur<,>));
+        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
         services.AddScoped<CurrentUser>();
 
