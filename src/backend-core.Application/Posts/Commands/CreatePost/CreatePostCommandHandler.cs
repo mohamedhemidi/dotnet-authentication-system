@@ -35,7 +35,9 @@ namespace backend_core.Application.Posts.Commands.CreatePost
 
             return new PostDTO
             {
-                post = newPost
+                Id = newPost.Id,
+                Title = newPost.Title,
+                Body = newPost.Body,
             };
         }
     }

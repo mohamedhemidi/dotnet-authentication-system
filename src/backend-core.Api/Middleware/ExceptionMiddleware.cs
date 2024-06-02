@@ -40,7 +40,7 @@ namespace backend_core.Api.Middleware
                 ErrorMessage = e.ErrorMessage,
             });
 
-            return context.Response.WriteAsync(JsonConvert.SerializeObject(new ErrorDeatils
+            return context.Response.WriteAsync(JsonConvert.SerializeObject(new ErrorDetails
             {
                 status = HttpStatusCode.UnprocessableEntity,
                 message = "Validation failed",
@@ -50,7 +50,7 @@ namespace backend_core.Api.Middleware
         }
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var errorResult = new ErrorDeatils { message = exception.Message, stackTrace = exception.StackTrace };
+            var errorResult = new ErrorDetails { message = exception.Message, stackTrace = exception.StackTrace };
 
             var exceptionType = exception.GetType();
 
@@ -81,7 +81,7 @@ namespace backend_core.Api.Middleware
 
     }
 
-    public class ErrorDeatils
+    public class ErrorDetails
     {
         public HttpStatusCode status { get; set; }
         public required string message { get; set; }

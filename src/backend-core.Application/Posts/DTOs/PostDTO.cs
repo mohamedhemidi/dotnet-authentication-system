@@ -8,6 +8,8 @@ namespace backend_core.Application.Posts.DTOs
 {
     public class PostDTO
     {
-        public Post post { get; set; }
+        public Guid Id { get; set; }
+        public string Title { get; set; }
+        public string Body { get; set; }
     }
 }
