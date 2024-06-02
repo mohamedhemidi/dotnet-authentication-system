@@ -24,7 +24,7 @@ namespace backend_core.Infrastructure.Authentication
             _dateTimeProvider = dateTimeProvider;
             _jwtSettings = jwtOptions.Value;
         }
-        public string GenerateToken(User user)
+        public string GenerateToken(AppUser user)
         {
             var claims = new List<Claim>
             {

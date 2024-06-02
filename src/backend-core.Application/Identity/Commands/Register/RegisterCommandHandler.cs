@@ -15,10 +15,10 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IEmailSender _emailSender;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<AppUser> _userManager;
 
     public RegisterCommandHandler(
-        UserManager<User> userManager, 
+        UserManager<AppUser> userManager, 
         IJwtTokenGenerator jwtTokenGenerator, 
         IEmailSender emailSender, 
         IUnitOfWork unitOfWork)
@@ -34,7 +34,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
         // Check if User Exists:
 
         // Create user :
-        var newUser = new User
+        var newUser = new AppUser
         {
             Email = command.registerDTO.Email,
             UserName = command.registerDTO.UserName,

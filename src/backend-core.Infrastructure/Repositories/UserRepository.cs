@@ -9,7 +9,7 @@ using backend_core.Infrastructure.Persistence.Data;
 
 namespace backend_core.Infrastructure.Repositories
 {
-    public class UserRepository : Repository<User>, IUserRepository
+    public class UserRepository : Repository<AppUser>, IUserRepository
     {
         public UserRepository(ApplicationDbContext db) : base(db)
         {

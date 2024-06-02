@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace backend_core.Domain.Entities
 {
-    public class User : IdentityUser
+    public class AppUser : IdentityUser
     {
         
     }

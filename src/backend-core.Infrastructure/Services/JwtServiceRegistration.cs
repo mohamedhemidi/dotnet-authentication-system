@@ -12,7 +12,7 @@ public static class JwtServiceRegistration
 {
     public static IServiceCollection ConfigureIdentitySettings(this IServiceCollection services, IConfiguration config)
     {
-        services.AddIdentity<User, IdentityRole>(options =>
+        services.AddIdentity<AppUser, IdentityRole>(options =>
         {
             options.User.RequireUniqueEmail = true;
             options.Password.RequireDigit = true;

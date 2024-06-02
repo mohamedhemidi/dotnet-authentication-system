@@ -18,10 +18,10 @@ namespace backend_core.Application.Modules.Account.Queries.Login
 
     public class LoginQueryHandler : IRequestHandler<LoginQuery, AccountResultDTO>
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signinManager;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signinManager;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
-        public LoginQueryHandler(UserManager<User> userManager, SignInManager<User> signinManager, IJwtTokenGenerator jwtTokenGenerator)
+        public LoginQueryHandler(UserManager<AppUser> userManager, SignInManager<AppUser> signinManager, IJwtTokenGenerator jwtTokenGenerator)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
             _userManager = userManager;

@@ -8,6 +8,6 @@ namespace backend_core.Application.Identity.Interfaces
 {
     public interface IJwtTokenGenerator
     {
-        string GenerateToken(User user);
+        string GenerateToken(AppUser user);
     }
 }

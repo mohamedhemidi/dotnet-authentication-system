@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend_core.Infrastructure.Persistence.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User>
+    public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

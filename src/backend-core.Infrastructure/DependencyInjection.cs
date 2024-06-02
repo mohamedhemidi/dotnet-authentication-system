@@ -52,6 +52,11 @@ public static class DependencyInjection
         services.AddTransient<IEmailSender, EmailSender>();
 
         // Identity Service:
+        // services.AddAuthentication(IdentityConstants.ApplicationScheme).AddIdentityCookies();
+        // services.AddAuthorizationBuilder();
+        services.AddAuthorization();
+        services.AddIdentityApiEndpoints<AppUser>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
 
         services.ConfigureIdentitySettings(config);
 

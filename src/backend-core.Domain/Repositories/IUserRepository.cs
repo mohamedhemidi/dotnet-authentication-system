@@ -6,7 +6,7 @@ using backend_core.Domain.Entities;
 
 namespace backend_core.Domain.Repositories
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IUserRepository : IRepository<AppUser>
     {
         
     }
