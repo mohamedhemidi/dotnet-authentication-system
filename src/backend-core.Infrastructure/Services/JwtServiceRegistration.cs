@@ -20,8 +20,10 @@ public static class JwtServiceRegistration
             options.Password.RequireUppercase = true;
             options.Password.RequireNonAlphanumeric = true;
             options.Password.RequiredLength = 8;
+            options.SignIn.RequireConfirmedEmail = true;
         })
-        .AddEntityFrameworkStores<ApplicationDbContext>();
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddTokenProvider<DataProtectorTokenProvider<AppUser>>(TokenOptions.DefaultProvider);;
 
         services.AddAuthentication(options =>
         {

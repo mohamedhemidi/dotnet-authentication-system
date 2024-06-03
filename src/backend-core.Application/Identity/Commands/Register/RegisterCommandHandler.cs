@@ -7,6 +7,10 @@ using backend_core.Application.Modules.Client.Account.Commands.Register;
 using backend_core.Application.Identity.DTOs.Account;
 using Microsoft.AspNetCore.Identity;
 using backend_core.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Routing;
+using backend_core.Domain.Models;
+using MimeKit;
 
 namespace backend_core.Application.Modules.Client.Account;
 
@@ -18,8 +22,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
     private readonly UserManager<AppUser> _userManager;
 
     public RegisterCommandHandler(
-        UserManager<AppUser> userManager, 
-        IJwtTokenGenerator jwtTokenGenerator, 
+        UserManager<AppUser> userManager,
+        IJwtTokenGenerator jwtTokenGenerator,
         IEmailSender emailSender, 
         IUnitOfWork unitOfWork)
     {
@@ -31,9 +35,14 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
     public async Task<AccountResultDTO> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
 
-        // Check if User Exists:
+        // Check if User Already Exists:
+        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == command.registerDTO.Email);
 
-        // Create user :
+        if (user != null)
+        {
+            throw new BadRequestException($"An account with the email : {command.registerDTO.Email} already exists");
+        }
+        // Create User :
         var newUser = new AppUser
         {
             Email = command.registerDTO.Email,
@@ -44,13 +53,28 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
 
         var createdUser = await _userManager.CreateAsync(newUser, command.registerDTO.Password);
 
+        // Create Role for User:
+
         if (createdUser.Succeeded)
         {
             var roleResult = await _userManager.AddToRoleAsync(newUser, "User");
-            await _unitOfWork.SubmitTransactionAsync(cancellationToken);
+
             if (roleResult.Succeeded)
             {
                 var token = _jwtTokenGenerator.GenerateToken(newUser);
+                await _unitOfWork.SubmitTransactionAsync(cancellationToken);
+
+                // Create Token To Verify By Email
+
+                var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+                string confirmationLink = $"http://localhost:5172/api/account/confirm-email?token={emailToken}&email={newUser.Email}";
+                var EmailRecipents = new List<MailboxAddress>();
+                var userEmail = new MailboxAddress("", newUser.Email);
+                EmailRecipents.Add(userEmail);
+                var confirmationEmail = new EmailMessage()
+                { To = EmailRecipents, Subject = "Confirm your email", Content = confirmationLink };
+                _emailSender.SendEmail(confirmationEmail);
+
                 return
                     new AccountResultDTO
                     (
@@ -63,14 +87,13 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
             }
             else
             {
-                // throw new BadRequestException(roleResult.Errors);
                 await _unitOfWork.RevertTransactionAsync(cancellationToken);
                 throw new BadRequestException(createdUser.Errors.ToString());
             }
         }
         else
         {
-            // await _unitOfWork.RevertTransactionAsync(cancellationToken);
+            await _unitOfWork.RevertTransactionAsync(cancellationToken);
             throw new BadRequestException("An error occured!");
         }
     }

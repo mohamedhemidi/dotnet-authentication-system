@@ -44,15 +44,15 @@ namespace backend_core.Api.Middleware
             {
                 status = HttpStatusCode.UnprocessableEntity,
                 message = "Validation failed",
-                errors = errors,
+                Errors = errors,
                 stackTrace = ex.StackTrace
             }));
         }
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
-            var errorResult = new ErrorDetails { message = exception.Message, stackTrace = exception.StackTrace };
+            var errorResult = new ErrorDetails { message = ex.Message, stackTrace = ex.StackTrace };
 
-            var exceptionType = exception.GetType();
+            var exceptionType = ex.GetType();
 
             if (exceptionType == typeof(BadRequestException))
             {
@@ -85,7 +85,7 @@ namespace backend_core.Api.Middleware
     {
         public HttpStatusCode status { get; set; }
         public required string message { get; set; }
-        public IEnumerable<ValidationError>? errors { get; set; }
+        public IEnumerable<ValidationError>? Errors { get; set; }
         public required string stackTrace { get; set; }
     }
     public class ValidationError

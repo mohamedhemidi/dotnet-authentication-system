@@ -8,6 +8,6 @@ namespace backend_core.Domain.Interfaces
 {
     public interface IEmailSender
     {
-        Task<bool> SendEmail(Email email);
+        void SendEmail(EmailMessage message);
     }
 }

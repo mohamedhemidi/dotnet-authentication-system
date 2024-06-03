@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using backend_core.Domain.Interfaces;
 using backend_core.Domain.Models;
+using backend_core.Infrastructure.Mail.Models;
+using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
-using SendGrid;
-using SendGrid.Helpers.Mail;
+using MimeKit;
 
 namespace backend_core.Infrastructure.Mail
 {
@@ -17,21 +15,44 @@ namespace backend_core.Infrastructure.Mail
         {
             _emailSettings = emailSettings.Value;
         }
-        public async Task<bool> SendEmail(Email email)
+
+        public async void SendEmail(EmailMessage message)
         {
-            var client = new SendGridClient(_emailSettings.ApiKey);
-            var to = new EmailAddress(email.To);
-            var from = new EmailAddress
+            var emailMessage = CreateEmailMessage(message);
+            await Send(emailMessage);
+        }
+        private MimeMessage CreateEmailMessage(EmailMessage message)
+        {
+            var emailMessage = new MimeMessage();
+
+            emailMessage.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.From));
+            emailMessage.To.AddRange(message.To);
+            emailMessage.Subject = message.Subject;
+            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text) {Text = message.Content};
+
+            return emailMessage;
+        }
+        private async Task Send(MimeMessage mailMessage)
+        {
+            using var client = new SmtpClient();
+
+            try
             {
-                Email = _emailSettings.FromAddress,
-                Name = _emailSettings.FromName
-            };
+                await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.Port, true);
+                client.AuthenticationMechanisms.Remove("XOAUTH2");
+                await client.AuthenticateAsync(_emailSettings.Username, _emailSettings.Password);
 
-            var message = MailHelper.CreateSingleEmail(from, to, email.Subject, email.Body, email.Body);
-            var response = await client.SendEmailAsync(message);
-
-            return response.StatusCode == System.Net.HttpStatusCode.OK || response.StatusCode == System.Net.HttpStatusCode.Accepted;
-
+                await client.SendAsync(mailMessage);
+            }
+            catch (System.Exception)
+            {
+                
+                throw new Exception("An error occured while sending email");
+            }
+            finally{
+                await client.DisconnectAsync(true);
+                client.Dispose();
+            }
         }
     }
 }

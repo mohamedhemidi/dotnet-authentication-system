@@ -7,6 +7,7 @@ using backend_core.Application.Modules.Client.Account.Queries.Login;
 using backend_core.Application.Identity.DTOs;
 using backend_core.Application.Identity.DTOs.Account;
 using backend_core.Application.Identity.Queries.Login;
+using backend_core.Application.Identity.Queries.ConfirmEmail;
 
 namespace backend_core.Api.Controllers.Client
 {
@@ -20,7 +21,7 @@ namespace backend_core.Api.Controllers.Client
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody]RegisterDTO request)
+        public async Task<IActionResult> Register([FromBody] RegisterDTO request)
         {
             var command = new RegisterCommand(request);
             AccountResultDTO registerResult = await _mediator.Send(command);
@@ -36,6 +37,14 @@ namespace backend_core.Api.Controllers.Client
             var loginResult = await _mediator.Send(query);
 
             return Ok(loginResult);
+        }
+        [HttpGet("confirm-email")]
+        public IActionResult ConfirmEmail(string token, string email)
+        {
+            var query = new ConfirmEmailQuery(token, email);
+            var confirmationResult = _mediator.Send(query);
+
+            return Ok(confirmationResult);
         }
     }
 }

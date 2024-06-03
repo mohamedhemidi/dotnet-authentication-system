@@ -15,6 +15,7 @@ using backend_core.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using backend_core.Infrastructure.Mail.Models;
 
 namespace backend_core.Infrastructure;
 
@@ -52,11 +53,6 @@ public static class DependencyInjection
         services.AddTransient<IEmailSender, EmailSender>();
 
         // Identity Service:
-        // services.AddAuthentication(IdentityConstants.ApplicationScheme).AddIdentityCookies();
-        // services.AddAuthorizationBuilder();
-        services.AddAuthorization();
-        services.AddIdentityApiEndpoints<AppUser>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
 
         services.ConfigureIdentitySettings(config);
 

@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using backend_core.Application.Posts.Commands.CreatePost;
 using backend_core.Application.Posts.DTOs;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend_core.Api.Controllers.Client
 {
+    [Authorize]
     [Route("api/post")]
     public class PostController : ControllerBase
     {
