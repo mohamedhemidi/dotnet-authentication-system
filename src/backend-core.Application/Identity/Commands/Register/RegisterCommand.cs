@@ -5,5 +5,6 @@ using MediatR;
 namespace backend_core.Application.Modules.Client.Account;
 
 public record RegisterCommand(
-    RegisterDTO registerDTO
+    RegisterDTO registerDTO,
+    string uri
 ) : IRequest<AccountResultDTO>;

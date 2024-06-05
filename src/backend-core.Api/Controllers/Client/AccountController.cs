@@ -23,7 +23,15 @@ namespace backend_core.Api.Controllers.Client
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDTO request)
         {
-            var command = new RegisterCommand(request);
+            var emailConfirmUri = Url.Action(
+                    action: nameof(ConfirmEmail),
+                    controller: "account",
+                    values: null,
+                    protocol: Request.Scheme,
+                    host: Request.Host.ToUriComponent()
+                );
+
+            var command = new RegisterCommand(request, emailConfirmUri);
             AccountResultDTO registerResult = await _mediator.Send(command);
 
             return Ok(registerResult);
@@ -39,11 +47,10 @@ namespace backend_core.Api.Controllers.Client
             return Ok(loginResult);
         }
         [HttpGet("confirm-email")]
-        public IActionResult ConfirmEmail(string token, string email)
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
         {
             var query = new ConfirmEmailQuery(token, email);
-            var confirmationResult = _mediator.Send(query);
-
+            var confirmationResult = await _mediator.Send(query);
             return Ok(confirmationResult);
         }
     }

@@ -13,8 +13,6 @@ namespace backend_core.Infrastructure.Repositories
     {
         private readonly ApplicationDbContext _db;
         private readonly Dictionary<Type, object> _repositories;
-        private IDbContextTransaction _transaction;
-
         public IUserRepository users { get; }
         public IPostRepository posts { get; }
 

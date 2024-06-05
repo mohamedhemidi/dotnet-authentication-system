@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace backend_core.Application.Identity.Queries.ConfirmEmail
 {
 
-    public class ConfirmEmailQueryHandler : IRequestHandler<ConfirmEmailQuery>
+    public class ConfirmEmailQueryHandler : IRequestHandler<ConfirmEmailQuery, bool>
     {
         private readonly UserManager<AppUser> _userManager;
         public ConfirmEmailQueryHandler(UserManager<AppUser> userManager)
@@ -21,24 +21,23 @@ namespace backend_core.Application.Identity.Queries.ConfirmEmail
         }
 
 
-        public async Task Handle(ConfirmEmailQuery request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(ConfirmEmailQuery request, CancellationToken cancellationToken)
         {
-            // 1. Validate if User does Exist
 
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == request.Email);
+            // 1. Validate if User does Exist
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == request.Email, cancellationToken: cancellationToken);
 
             if (user != null)
             {
                 var result = await _userManager.ConfirmEmailAsync(user, request.Token);
                 if (result.Succeeded)
                 {
-                    return;
+                    return true;
                 }
             }
-            else
-            {
-                throw new NotFoundException(nameof(user), request.Email);
-            }
+
+            return false;
+
         }
     }
 }

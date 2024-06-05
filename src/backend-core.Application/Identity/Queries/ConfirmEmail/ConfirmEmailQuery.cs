@@ -7,8 +7,8 @@ using MediatR;
 namespace backend_core.Application.Identity.Queries.ConfirmEmail
 {
     public record ConfirmEmailQuery(
-        string Email,
-        string Token
-    ): IRequest;
+        string Token,
+        string Email
+    ): IRequest<bool>;
 
 }

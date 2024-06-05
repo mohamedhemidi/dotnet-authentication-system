@@ -11,30 +11,32 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Routing;
 using backend_core.Domain.Models;
 using MimeKit;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace backend_core.Application.Modules.Client.Account;
 
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountResultDTO>
 {
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
-    private readonly IEmailSender _emailSender;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<AppUser> _userManager;
+    private readonly IEmailSender _emailSender;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator;
+
+    private readonly IUnitOfWork _unitOfWork;
 
     public RegisterCommandHandler(
         UserManager<AppUser> userManager,
-        IJwtTokenGenerator jwtTokenGenerator,
-        IEmailSender emailSender, 
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IEmailSender emailSender,
+        IJwtTokenGenerator jwtTokenGenerator
+        )
     {
-        _jwtTokenGenerator = jwtTokenGenerator;
-        _emailSender = emailSender;
         _userManager = userManager;
         _unitOfWork = unitOfWork;
+        _emailSender = emailSender;
+        _jwtTokenGenerator = jwtTokenGenerator;
     }
     public async Task<AccountResultDTO> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
-
         // Check if User Already Exists:
         var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == command.registerDTO.Email);
 
@@ -62,18 +64,30 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
             if (roleResult.Succeeded)
             {
                 var token = _jwtTokenGenerator.GenerateToken(newUser);
-                await _unitOfWork.SubmitTransactionAsync(cancellationToken);
 
-                // Create Token To Verify By Email
+                // Create And Send Token To Verify By Email
 
                 var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-                string confirmationLink = $"http://localhost:5172/api/account/confirm-email?token={emailToken}&email={newUser.Email}";
-                var EmailRecipents = new List<MailboxAddress>();
-                var userEmail = new MailboxAddress("", newUser.Email);
-                EmailRecipents.Add(userEmail);
+
+                var uriBuilder = new UriBuilder(command.uri);
+                var queryParams = new Dictionary<string, string>
+                {
+                    { "token", emailToken },
+                    { "email", newUser.Email }
+                };
+                uriBuilder.Query = QueryHelpers.AddQueryString(string.Empty, queryParams).TrimStart('?');
+
+                var confirmationLink = uriBuilder.ToString();
+
                 var confirmationEmail = new EmailMessage()
-                { To = EmailRecipents, Subject = "Confirm your email", Content = confirmationLink };
+                {
+                    To = new List<MailboxAddress>() { new MailboxAddress("", newUser.Email) },
+                    Subject = "Confirm your email",
+                    Content = confirmationLink
+                };
                 _emailSender.SendEmail(confirmationEmail);
+
+                await _unitOfWork.SubmitTransactionAsync(cancellationToken);
 
                 return
                     new AccountResultDTO
