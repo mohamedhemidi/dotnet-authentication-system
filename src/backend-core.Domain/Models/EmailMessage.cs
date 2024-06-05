@@ -8,9 +8,9 @@ namespace backend_core.Domain.Models
 {
     public class EmailMessage
     {
-        public List<MailboxAddress> To { get; set; }
-        public string Subject { get; set; }
-        public string Content { get; set; }
+        public required List<MailboxAddress> To { get; set; }
+        public required string Subject { get; set; }
+        public required string Content { get; set; }
 
     }
 }

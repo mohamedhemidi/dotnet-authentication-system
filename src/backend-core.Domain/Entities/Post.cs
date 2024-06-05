@@ -8,7 +8,7 @@ namespace backend_core.Domain.Entities
 {
     public class Post : BaseDomainEntity
     {
-        public string Title { get; set; }
-        public string Body { get; set; }
+        public required string Title { get; set; }
+        public required string Body { get; set; }
     }
 }

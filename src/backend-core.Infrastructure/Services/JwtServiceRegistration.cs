@@ -23,7 +23,7 @@ public static class JwtServiceRegistration
             options.SignIn.RequireConfirmedEmail = true;
         })
         .AddEntityFrameworkStores<ApplicationDbContext>()
-        .AddTokenProvider<DataProtectorTokenProvider<AppUser>>(TokenOptions.DefaultProvider);;
+        .AddTokenProvider<DataProtectorTokenProvider<AppUser>>(TokenOptions.DefaultProvider); ;
 
         services.AddAuthentication(options =>
         {
@@ -43,7 +43,7 @@ public static class JwtServiceRegistration
             ValidAudience = config["JwtSettings:Audience"],
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                    System.Text.Encoding.UTF8.GetBytes(config["JwtSettings:Secret"])
+                    System.Text.Encoding.UTF8.GetBytes(config["JwtSettings:Secret"]!)
                 )
         };
     });

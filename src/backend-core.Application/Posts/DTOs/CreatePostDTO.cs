@@ -7,7 +7,7 @@ namespace backend_core.Application.Posts.DTOs
 {
     public class CreatePostDTO
     {
-        public string Title { get; set; }
-        public string Body { get; set; }
+        public required string Title { get; set; }
+        public required string Body { get; set; }
     }
 }

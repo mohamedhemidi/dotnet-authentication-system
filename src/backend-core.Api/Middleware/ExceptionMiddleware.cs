@@ -45,12 +45,12 @@ namespace backend_core.Api.Middleware
                 status = HttpStatusCode.UnprocessableEntity,
                 message = "Validation failed",
                 Errors = errors,
-                stackTrace = ex.StackTrace
+                stackTrace = ex.StackTrace!
             }));
         }
         private static Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
-            var errorResult = new ErrorDetails { message = ex.Message, stackTrace = ex.StackTrace };
+            var errorResult = new ErrorDetails { message = ex.Message, stackTrace = ex.StackTrace! };
 
             var exceptionType = ex.GetType();
 

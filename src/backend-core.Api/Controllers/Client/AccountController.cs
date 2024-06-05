@@ -31,7 +31,7 @@ namespace backend_core.Api.Controllers.Client
                     host: Request.Host.ToUriComponent()
                 );
 
-            var command = new RegisterCommand(request, emailConfirmUri);
+            var command = new RegisterCommand(request, emailConfirmUri!);
             AccountResultDTO registerResult = await _mediator.Send(command);
 
             return Ok(registerResult);

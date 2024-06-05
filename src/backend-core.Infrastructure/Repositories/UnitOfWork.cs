@@ -55,7 +55,8 @@ namespace backend_core.Infrastructure.Repositories
 
             if (_repositories.ContainsKey(typeof(T)))
             {
-                return _repositories[typeof(T)] as IRepository<T>;
+                var result = _repositories[typeof(T)] as IRepository<T>;
+                return result!;
             }
 
             var repository = new Repository<T>(_db);

@@ -38,7 +38,8 @@ namespace backend_core.Infrastructure.Repositories
         {
             IQueryable<T> query = dbSet;
             query = query.Where(filter);
-            return await query.FirstOrDefaultAsync();
+            var result = await query.FirstOrDefaultAsync();
+            return result!;
         }
 
         public async Task<IReadOnlyList<T>> GetAll()

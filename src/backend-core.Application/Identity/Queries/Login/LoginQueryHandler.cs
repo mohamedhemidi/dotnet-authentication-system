@@ -49,8 +49,8 @@ namespace backend_core.Application.Modules.Account.Queries.Login
             var token = _jwtTokenGenerator.GenerateToken(user);
             return new AccountResultDTO(
                 user.Id,
-                user.UserName,
-                user.Email,
+                user.UserName!,
+                user.Email!,
                 token
             );
         }

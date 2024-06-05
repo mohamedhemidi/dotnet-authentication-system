@@ -75,7 +75,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
                     { "token", emailToken },
                     { "email", newUser.Email }
                 };
-                uriBuilder.Query = QueryHelpers.AddQueryString(string.Empty, queryParams).TrimStart('?');
+                uriBuilder.Query = QueryHelpers.AddQueryString(string.Empty, queryParams!).TrimStart('?');
 
                 var confirmationLink = uriBuilder.ToString();
 
@@ -102,7 +102,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
             else
             {
                 await _unitOfWork.RevertTransactionAsync(cancellationToken);
-                throw new BadRequestException(createdUser.Errors.ToString());
+                throw new BadRequestException(createdUser.Errors.ToString()!);
             }
         }
         else
