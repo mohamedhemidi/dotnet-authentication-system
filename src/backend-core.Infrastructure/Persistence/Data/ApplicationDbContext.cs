@@ -40,7 +40,7 @@ namespace backend_core.Infrastructure.Persistence.Data
                 }
             }
 
-            var result = await base.SaveChangesAsync();
+            var result = await base.SaveChangesAsync(cancellationToken);
 
             return result;
         }

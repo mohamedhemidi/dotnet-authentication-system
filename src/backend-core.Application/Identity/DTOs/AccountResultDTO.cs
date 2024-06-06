@@ -10,5 +10,5 @@ public record AccountResultDTO(
     string Id,
     string Email,
     string Username,
-    string Token
+    string? Token = null
 );

@@ -223,9 +223,10 @@ namespace backend_core.Infrastructure.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "3fe8e0f7-a63e-4673-8fd6-2f28557fd391", null, "User", "USER" },
-                    { "5951f0a2-68f8-4db4-aa1e-27cd053766e9", null, "Admin", "ADMIN" },
-                    { "d7e3f3b0-5b02-4f83-a3d5-8dbd9d08d66c", null, "Super Admin", "SUPER_ADMIN" }
+                    { "65a6ad73-257b-4b54-91d2-082c9ce5ceb0", null, "User", "USER" },
+                    { "a28cb2fd-d336-49f4-b055-8cf04206bbe3", null, "Super Admin", "SUPER_ADMIN" },
+                    { "c6646303-c27e-4286-9233-d371e2b24b2a", null, "Admin", "ADMIN" },
+                    { "d8fff901-6964-4885-afc5-57f1747946bf", null, "Moderator", "MODERATOR" }
                 });
 
             migrationBuilder.CreateIndex(

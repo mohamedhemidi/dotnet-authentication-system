@@ -23,6 +23,7 @@ public static class JwtServiceRegistration
             options.SignIn.RequireConfirmedEmail = true;
         })
         .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders()
         .AddTokenProvider<DataProtectorTokenProvider<AppUser>>(TokenOptions.DefaultProvider); ;
 
         services.AddAuthentication(options =>

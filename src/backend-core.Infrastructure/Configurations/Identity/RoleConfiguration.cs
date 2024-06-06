@@ -25,6 +25,11 @@ namespace backend_core.Infrastructure.Configurations.Identity
                 },
                 new IdentityRole
                 {
+                    Name = "Moderator",
+                    NormalizedName = "MODERATOR"
+                },
+                new IdentityRole
+                {
                     Name = "User",
                     NormalizedName = "USER"
                 }

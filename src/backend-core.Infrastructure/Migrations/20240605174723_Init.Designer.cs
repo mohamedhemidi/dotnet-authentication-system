@@ -12,7 +12,7 @@ using backend_core.Infrastructure.Persistence.Data;
 namespace backend_core.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240526180449_init")]
+    [Migration("20240605174723_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -53,19 +53,25 @@ namespace backend_core.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d7e3f3b0-5b02-4f83-a3d5-8dbd9d08d66c",
+                            Id = "a28cb2fd-d336-49f4-b055-8cf04206bbe3",
                             Name = "Super Admin",
                             NormalizedName = "SUPER_ADMIN"
                         },
                         new
                         {
-                            Id = "5951f0a2-68f8-4db4-aa1e-27cd053766e9",
+                            Id = "c6646303-c27e-4286-9233-d371e2b24b2a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "3fe8e0f7-a63e-4673-8fd6-2f28557fd391",
+                            Id = "d8fff901-6964-4885-afc5-57f1747946bf",
+                            Name = "Moderator",
+                            NormalizedName = "MODERATOR"
+                        },
+                        new
+                        {
+                            Id = "65a6ad73-257b-4b54-91d2-082c9ce5ceb0",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -177,38 +183,7 @@ namespace backend_core.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("backend_core.Domain.Entities.Post", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("Created_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("Created_by")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("Updated_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("Updated_by")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("posts");
-                });
-
-            modelBuilder.Entity("backend_core.Domain.Entities.User", b =>
+            modelBuilder.Entity("backend_core.Domain.Entities.AppUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
@@ -272,6 +247,37 @@ namespace backend_core.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("backend_core.Domain.Entities.Post", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("Created_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("Created_by")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("Updated_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("Updated_by")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("posts");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -283,7 +289,7 @@ namespace backend_core.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("backend_core.Domain.Entities.User", null)
+                    b.HasOne("backend_core.Domain.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -292,7 +298,7 @@ namespace backend_core.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("backend_core.Domain.Entities.User", null)
+                    b.HasOne("backend_core.Domain.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -307,7 +313,7 @@ namespace backend_core.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backend_core.Domain.Entities.User", null)
+                    b.HasOne("backend_core.Domain.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -316,7 +322,7 @@ namespace backend_core.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("backend_core.Domain.Entities.User", null)
+                    b.HasOne("backend_core.Domain.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -63,7 +63,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
 
             if (roleResult.Succeeded)
             {
-                var token = _jwtTokenGenerator.GenerateToken(newUser);
+                var token = _jwtTokenGenerator.GenerateToken(newUser, ["User"]);
 
                 // Create And Send Token To Verify By Email
 
@@ -85,7 +85,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
                     Subject = "Confirm your email",
                     Content = confirmationLink
                 };
-                _emailSender.SendEmail(confirmationEmail);
+                await _emailSender.SendEmail(confirmationEmail);
 
                 await _unitOfWork.SubmitTransactionAsync(cancellationToken);
 

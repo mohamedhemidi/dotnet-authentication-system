@@ -16,7 +16,7 @@ namespace backend_core.Infrastructure.Mail
             _emailSettings = emailSettings.Value;
         }
 
-        public async void SendEmail(EmailMessage message)
+        public async Task SendEmail(EmailMessage message)
         {
             var emailMessage = CreateEmailMessage(message);
             await Send(emailMessage);

@@ -46,6 +46,14 @@ namespace backend_core.Api.Controllers.Client
 
             return Ok(loginResult);
         }
+        [HttpPost("login-2fa")]
+        public async Task<IActionResult> LoginWithOTP([FromBody] LoginTwoFactorsDTO request)
+        {
+            var query = new LoginOtpQuery(request);
+            var loginResult = await _mediator.Send(query);
+
+            return Ok(loginResult);
+        }
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string token, string email)
         {

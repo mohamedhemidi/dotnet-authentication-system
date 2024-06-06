@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -11,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using backend_core.Domain.Entities;
 using backend_core.Domain.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace backend_core.Infrastructure.Authentication
 {
@@ -19,12 +19,12 @@ namespace backend_core.Infrastructure.Authentication
         private readonly JwtSettings _jwtSettings;
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public JwtTokenGenerator(IDateTimeProvider dateTimeProvider,IOptions<JwtSettings> jwtOptions)
+        public JwtTokenGenerator(IDateTimeProvider dateTimeProvider, IOptions<JwtSettings> jwtOptions)
         {
             _dateTimeProvider = dateTimeProvider;
             _jwtSettings = jwtOptions.Value;
         }
-        public string GenerateToken(AppUser user)
+        public string GenerateToken(AppUser user, IList<string> roles)
         {
             var claims = new List<Claim>
             {
@@ -32,26 +32,24 @@ namespace backend_core.Infrastructure.Authentication
                 new Claim(JwtRegisteredClaimNames.Email, user.Email!),
                 new Claim(JwtRegisteredClaimNames.Name, user.UserName!)
             };
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = _dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
-                SigningCredentials = creds,
-                Issuer = _jwtSettings.Issuer,
-                Audience = _jwtSettings.Audience
-            };
+            var tokenDescriptor = new JwtSecurityToken(
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
+                expires: DateTime.Now.AddDays(2),
+                claims: claims,
+                signingCredentials: creds
+            );
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return tokenHandler.WriteToken(token);
-
-
+            return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
         }
     }
 }
