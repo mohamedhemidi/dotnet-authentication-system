@@ -15,7 +15,7 @@ namespace backend_core.Api.Controllers.Admin
         }
 
         [HttpGet("list")]
-        public async Task<IActionResult> ListUsers()
+        public IActionResult ListUsers()
         {
             var users = new List<string> { "user1", "user2", "user3948" };
 

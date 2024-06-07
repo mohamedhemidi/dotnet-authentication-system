@@ -4,7 +4,8 @@ using MediatR;
 
 namespace backend_core.Application.Modules.Client.Account;
 
-public record RegisterCommand(
-    RegisterDTO registerDTO,
-    string Uri
-) : IRequest<AccountResultDTO>;
+public record ResetPasswordCommand(
+    ResetPasswordDTO resetPasswordDTO,
+    string Token,
+    string Email
+) : IRequest<bool>;

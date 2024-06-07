@@ -69,7 +69,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
 
                 var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
 
-                var uriBuilder = new UriBuilder(command.uri);
+                var uriBuilder = new UriBuilder(command.Uri);
                 var queryParams = new Dictionary<string, string>
                 {
                     { "token", emailToken },

@@ -8,6 +8,8 @@ using backend_core.Application.Identity.DTOs;
 using backend_core.Application.Identity.DTOs.Account;
 using backend_core.Application.Identity.Queries.Login;
 using backend_core.Application.Identity.Queries.ConfirmEmail;
+using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
 
 namespace backend_core.Api.Controllers.Client
 {
@@ -60,6 +62,29 @@ namespace backend_core.Api.Controllers.Client
             var query = new ConfirmEmailQuery(token, email);
             var confirmationResult = await _mediator.Send(query);
             return Ok(confirmationResult);
+        }
+        [AllowAnonymous]
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO request)
+        {
+            var resetPasswordUri = Url.Action(
+                    action: nameof(ResetPassword),
+                    controller: "account",
+                    values: null,
+                    protocol: Request.Scheme,
+                    host: Request.Host.ToUriComponent()
+                );
+            var command = new ForgotPasswordQuery(request.Email, resetPasswordUri!);
+            var confirmationResult = await _mediator.Send(command);
+            return Ok(confirmationResult);
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(string Token, string Email, [FromBody] ResetPasswordDTO request)
+        {
+            var command = new ResetPasswordCommand(request, Token, Email);
+            var resetPasswordResult = await _mediator.Send(command);
+            return Ok(resetPasswordResult);
         }
     }
 }
