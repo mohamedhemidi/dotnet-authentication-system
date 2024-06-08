@@ -16,11 +16,12 @@ using backend_core.Domain.Models;
 using MimeKit;
 using backend_core.Domain.Interfaces;
 using backend_core.Application.Identity.DTOs;
+using backend_core.Domain.Common;
 
 namespace backend_core.Application.Modules.Account.Queries.Login
 {
 
-    public class LoginQueryHandler : IRequestHandler<LoginQuery, AccountResultDTO>
+    public class LoginQueryHandler : IRequestHandler<LoginQuery, ApiResponse<AccountResultDTO>>
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signinManager;
@@ -38,7 +39,7 @@ namespace backend_core.Application.Modules.Account.Queries.Login
             _emailSender = emailSender;
         }
 
-        public async Task<AccountResultDTO> Handle(LoginQuery query, CancellationToken cancellationToken)
+        public async Task<ApiResponse<AccountResultDTO>> Handle(LoginQuery query, CancellationToken cancellationToken)
         {
             // 1. Validate if User does Exist
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == query.loginDTO.Email);
@@ -62,12 +63,18 @@ namespace backend_core.Application.Modules.Account.Queries.Login
                     Content = twoFactorsToken
                 };
                 await _emailSender.SendEmail(confirmationOtpEmail);
-                return new AccountResultDTO(
-                    user.Id,
-                    user.UserName!,
-                    user.Email!
-                    
-                 );
+
+                return new ApiResponse<AccountResultDTO>
+                {
+                    IsSuccess = true,
+                    Message = "An OTP message is sent to your email",
+                    StatusCode = 200,
+                    Response = new AccountResultDTO(
+                                    user.Id,
+                                    user.UserName!,
+                                    user.Email!
+                    )
+                };
             }
 
 
@@ -86,13 +93,18 @@ namespace backend_core.Application.Modules.Account.Queries.Login
             var token = _jwtTokenGenerator.GenerateToken(user, userRoles);
 
 
-
-            return new AccountResultDTO(
-                user.Id,
-                user.UserName!,
-                user.Email!,
-                token
-            );
+            return new ApiResponse<AccountResultDTO>
+            {
+                IsSuccess = true,
+                Message = "You are logged in successfully",
+                StatusCode = 200,
+                Response = new AccountResultDTO(
+                                user.Id,
+                                user.UserName!,
+                                user.Email!,
+                                token
+                            )
+            };
         }
     }
 }

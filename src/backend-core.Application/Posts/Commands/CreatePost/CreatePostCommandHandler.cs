@@ -8,10 +8,11 @@ using backend_core.Application.Identity;
 using backend_core.Application.Posts.DTOs;
 using backend_core.Domain.Entities;
 using MediatR;
+using backend_core.Domain.Common;
 
 namespace backend_core.Application.Posts.Commands.CreatePost
 {
-    public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, PostDTO>
+    public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, ApiResponse<PostDTO>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -19,7 +20,7 @@ namespace backend_core.Application.Posts.Commands.CreatePost
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<PostDTO> Handle(CreatePostCommand command, CancellationToken cancellationToken)
+        public async Task<ApiResponse<PostDTO>> Handle(CreatePostCommand command, CancellationToken cancellationToken)
         {
             // Create new Post :
 
@@ -33,11 +34,17 @@ namespace backend_core.Application.Posts.Commands.CreatePost
 
             await _unitOfWork.Save();
 
-            return new PostDTO
+            return new ApiResponse<PostDTO>
             {
-                Id = newPost.Id,
-                Title = newPost.Title,
-                Body = newPost.Body,
+                IsSuccess = true,
+                Message = "Post added successfully",
+                StatusCode = 200,
+                Response = new PostDTO
+                {
+                    Id = newPost.Id,
+                    Title = newPost.Title,
+                    Body = newPost.Body,
+                }
             };
         }
     }

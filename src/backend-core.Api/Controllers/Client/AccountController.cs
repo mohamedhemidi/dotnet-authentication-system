@@ -9,7 +9,6 @@ using backend_core.Application.Identity.DTOs.Account;
 using backend_core.Application.Identity.Queries.Login;
 using backend_core.Application.Identity.Queries.ConfirmEmail;
 using Microsoft.AspNetCore.Authorization;
-using System.ComponentModel.DataAnnotations;
 
 namespace backend_core.Api.Controllers.Client
 {
@@ -31,10 +30,10 @@ namespace backend_core.Api.Controllers.Client
                     values: null,
                     protocol: Request.Scheme,
                     host: Request.Host.ToUriComponent()
-                );
+            );
 
             var command = new RegisterCommand(request, emailConfirmUri!);
-            AccountResultDTO registerResult = await _mediator.Send(command);
+            var registerResult = await _mediator.Send(command);
 
             return Ok(registerResult);
 
@@ -73,7 +72,7 @@ namespace backend_core.Api.Controllers.Client
                     values: null,
                     protocol: Request.Scheme,
                     host: Request.Host.ToUriComponent()
-                );
+            );
             var command = new ForgotPasswordQuery(request.Email, resetPasswordUri!);
             var confirmationResult = await _mediator.Send(command);
             return Ok(confirmationResult);

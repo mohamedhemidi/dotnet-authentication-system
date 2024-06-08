@@ -1,5 +1,6 @@
 using System.Net;
 using backend_core.Application.Common.Exceptions;
+using backend_core.Domain.Common;
 using FluentValidation;
 using Newtonsoft.Json;
 
@@ -40,54 +41,54 @@ namespace backend_core.Api.Middleware
                 ErrorMessage = e.ErrorMessage,
             });
 
-            return context.Response.WriteAsync(JsonConvert.SerializeObject(new ErrorDetails
+            return context.Response.WriteAsync(JsonConvert.SerializeObject(new ApiResponse<IEnumerable<ValidationError>>
             {
-                status = HttpStatusCode.UnprocessableEntity,
-                message = "Validation failed",
-                Errors = errors,
-                stackTrace = ex.StackTrace!
+                IsSuccess = false,
+                Message = "Validation Failed",
+                StatusCode = (int)HttpStatusCode.UnprocessableEntity,
+                Response = errors,
+                StackTrace = ex.StackTrace!
             }));
         }
         private static Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
-            var errorResult = new ErrorDetails { message = ex.Message, stackTrace = ex.StackTrace! };
+            var errorResult = new ApiResponse<Exception>
+            {
+                IsSuccess = false,
+                Message = ex.Message,
+                StackTrace = ex.StackTrace!,
+                StatusCode = (int)HttpStatusCode.InternalServerError
+            };
 
             var exceptionType = ex.GetType();
 
             if (exceptionType == typeof(BadRequestException))
             {
-                errorResult.status = HttpStatusCode.BadRequest;
+                errorResult.StatusCode = (int)HttpStatusCode.BadRequest;
             }
             else if (exceptionType == typeof(NotFoundException))
             {
-                errorResult.status = HttpStatusCode.NotFound;
+                errorResult.StatusCode = (int)HttpStatusCode.NotFound;
             }
             else if (exceptionType == typeof(UnauthorizedException))
             {
-                errorResult.status = HttpStatusCode.Unauthorized;
+                errorResult.StatusCode = (int)HttpStatusCode.Unauthorized;
             }
             else
             {
-                errorResult.status = HttpStatusCode.InternalServerError;
+                errorResult.StatusCode = (int)HttpStatusCode.InternalServerError;
             }
 
             var exceptionResult = JsonConvert.SerializeObject(errorResult);
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)errorResult.status;
+            context.Response.StatusCode = errorResult.StatusCode;
 
             return context.Response.WriteAsync(exceptionResult);
         }
 
     }
 
-    public class ErrorDetails
-    {
-        public HttpStatusCode status { get; set; }
-        public required string message { get; set; }
-        public IEnumerable<ValidationError>? Errors { get; set; }
-        public required string stackTrace { get; set; }
-    }
     public class ValidationError
     {
         public required string PropertyName { get; set; }

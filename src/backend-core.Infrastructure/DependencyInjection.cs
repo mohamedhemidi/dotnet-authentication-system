@@ -48,9 +48,11 @@ public static class DependencyInjection
 
 
         // Email Service:
+        string infrastructureRoot = Path.Combine(AppContext.BaseDirectory, "Mail", "Templates");
 
         services.Configure<EmailSettings>(config.GetSection("EmailSettings"));
         services.AddTransient<IEmailSender, EmailSender>();
+        services.AddSingleton<IEmailBodyBuilder, EmailBodyBuilder>();
 
         // Identity Service:
 

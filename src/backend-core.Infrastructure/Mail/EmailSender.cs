@@ -5,6 +5,7 @@ using backend_core.Infrastructure.Mail.Models;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using MimeKit.Text;
 
 namespace backend_core.Infrastructure.Mail
 {
@@ -28,7 +29,7 @@ namespace backend_core.Infrastructure.Mail
             emailMessage.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.From));
             emailMessage.To.AddRange(message.To);
             emailMessage.Subject = message.Subject;
-            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text) {Text = message.Content};
+            emailMessage.Body = new TextPart(TextFormat.Html) {Text = message.Content};
 
             return emailMessage;
         }

@@ -13,10 +13,11 @@ using backend_core.Domain.Models;
 using MimeKit;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Net;
+using backend_core.Domain.Common;
 
 namespace backend_core.Application.Modules.Client.Account;
 
-public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, bool>
+public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, ApiResponse<bool>>
 {
     private readonly UserManager<AppUser> _userManager;
 
@@ -25,7 +26,7 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         _userManager = userManager;
     }
 
-    public async Task<bool> Handle(ResetPasswordCommand command, CancellationToken cancellationToken)
+    public async Task<ApiResponse<bool>> Handle(ResetPasswordCommand command, CancellationToken cancellationToken)
     {
         // 1. Validate if User does Exist
         var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == command.Email, cancellationToken: cancellationToken);
@@ -35,13 +36,31 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
             var resetPasswordResult = await _userManager.ResetPasswordAsync(user, command.Token, command.resetPasswordDTO.Password);
             if (resetPasswordResult.Succeeded)
             {
-                return true;
+                return new ApiResponse<bool>
+                {
+                    IsSuccess = true,
+                    Message = "Your password has been changed successfully",
+                    StatusCode = 200,
+                    Response = true
+                };
             }
             else
             {
-                return false;
+                return new ApiResponse<bool>
+                {
+                    IsSuccess = false,
+                    Message = "An error occured while changing your password",
+                    StatusCode = 400,
+                    Response = false
+                };
             }
         }
-        return false;
+        return new ApiResponse<bool>
+        {
+            IsSuccess = false,
+            Message = "User does not exist",
+            StatusCode = 400,
+            Response = false
+        };
     }
 }

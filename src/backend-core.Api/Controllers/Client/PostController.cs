@@ -21,13 +21,12 @@ namespace backend_core.Api.Controllers.Client
         }
 
         [HttpPost("create")]
-         public async Task<IActionResult> Create([FromBody]CreatePostDTO request)
+        public async Task<IActionResult> Create([FromBody] CreatePostDTO request)
         {
             var command = new CreatePostCommand(request);
-            PostDTO postResult = await _mediator.Send(command);
+            var postResult = await _mediator.Send(command);
 
             return Ok(postResult);
-
         }
 
     }

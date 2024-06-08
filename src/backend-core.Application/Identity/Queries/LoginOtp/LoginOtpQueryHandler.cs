@@ -15,11 +15,12 @@ using Microsoft.EntityFrameworkCore;
 using backend_core.Domain.Models;
 using MimeKit;
 using backend_core.Domain.Interfaces;
+using backend_core.Domain.Common;
 
 namespace backend_core.Application.Modules.Account.Queries.Login
 {
 
-    public class LoginOtpQueryHandler : IRequestHandler<LoginOtpQuery, AccountResultDTO>
+    public class LoginOtpQueryHandler : IRequestHandler<LoginOtpQuery, ApiResponse<AccountResultDTO>>
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signinManager;
@@ -35,7 +36,7 @@ namespace backend_core.Application.Modules.Account.Queries.Login
             _signinManager = signinManager;
         }
 
-        public async Task<AccountResultDTO> Handle(LoginOtpQuery query, CancellationToken cancellationToken)
+        public async Task<ApiResponse<AccountResultDTO>> Handle(LoginOtpQuery query, CancellationToken cancellationToken)
         {
             //// 1. Check if user exists:
 
@@ -56,12 +57,18 @@ namespace backend_core.Application.Modules.Account.Queries.Login
 
                 var token = _jwtTokenGenerator.GenerateToken(user!, userRoles);
 
-                return new AccountResultDTO(
-                    user!.Id,
-                    user.UserName!,
-                    user.Email!,
-                    token
-                );
+                return new ApiResponse<AccountResultDTO>
+                {
+                    IsSuccess = true,
+                    Message = "You are logged in successfully",
+                    StatusCode = 200,
+                    Response = new AccountResultDTO(
+                                user!.Id,
+                                user.UserName!,
+                                user.Email!,
+                                token
+                    )
+                };
             }
             else
             {

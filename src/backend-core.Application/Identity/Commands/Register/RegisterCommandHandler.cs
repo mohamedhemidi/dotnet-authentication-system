@@ -12,10 +12,11 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using backend_core.Domain.Models;
 using MimeKit;
 using Microsoft.AspNetCore.WebUtilities;
+using backend_core.Domain.Common;
 
 namespace backend_core.Application.Modules.Client.Account;
 
-public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountResultDTO>
+public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ApiResponse<AccountResultDTO>>
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly IEmailSender _emailSender;
@@ -35,7 +36,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
         _emailSender = emailSender;
         _jwtTokenGenerator = jwtTokenGenerator;
     }
-    public async Task<AccountResultDTO> Handle(RegisterCommand command, CancellationToken cancellationToken)
+    public async Task<ApiResponse<AccountResultDTO>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
         // Check if User Already Exists:
         var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == command.registerDTO.Email);
@@ -89,15 +90,20 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AccountRe
 
                 await _unitOfWork.SubmitTransactionAsync(cancellationToken);
 
-                return
-                    new AccountResultDTO
+                return new ApiResponse<AccountResultDTO>
+                {
+                    IsSuccess = true,
+                    Message = "Registered successfully, Please check your email to confirm",
+                    StatusCode = 200,
+                    Response = new AccountResultDTO
                     (
                        newUser.Id,
                        newUser.Email,
                        newUser.UserName,
                        token
                     )
-                ;
+                };
+
             }
             else
             {

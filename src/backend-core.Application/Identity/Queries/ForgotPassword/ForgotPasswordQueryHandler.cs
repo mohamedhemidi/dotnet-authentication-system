@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using backend_core.Application.Common.Exceptions;
+using backend_core.Domain.Common;
 using backend_core.Domain.Entities;
 using backend_core.Domain.Interfaces;
 using backend_core.Domain.Models;
@@ -16,18 +17,20 @@ using MimeKit;
 namespace backend_core.Application.Identity.Queries.ConfirmEmail
 {
 
-    public class ForgotPasswordQueryHandler : IRequestHandler<ForgotPasswordQuery, bool>
+    public class ForgotPasswordQueryHandler : IRequestHandler<ForgotPasswordQuery, ApiResponse<bool>>
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IEmailSender _emailSender;
-        public ForgotPasswordQueryHandler(UserManager<AppUser> userManager, IEmailSender emailSender)
+        private readonly IEmailBodyBuilder _emailBodyBuilder;
+        public ForgotPasswordQueryHandler(UserManager<AppUser> userManager, IEmailSender emailSender, IEmailBodyBuilder emailBodyBuilder)
         {
             _userManager = userManager;
             _emailSender = emailSender;
+            _emailBodyBuilder = emailBodyBuilder;
         }
 
 
-        public async Task<bool> Handle(ForgotPasswordQuery query, CancellationToken cancellationToken)
+        public async Task<ApiResponse<bool>> Handle(ForgotPasswordQuery query, CancellationToken cancellationToken)
         {
 
             // 1. Validate if User does Exist
@@ -52,14 +55,26 @@ namespace backend_core.Application.Identity.Queries.ConfirmEmail
                 {
                     To = new List<MailboxAddress>() { new MailboxAddress("", user.Email) },
                     Subject = "Reset your password",
-                    Content = resetPasswordLink
+                    Content = await _emailBodyBuilder.GetRestPasswordEmailBodyAsync(resetPasswordLink)
                 };
                 await _emailSender.SendEmail(passwordRestEmail);
-                return true;
+
+                return new ApiResponse<bool>
+                {
+                    IsSuccess = true,
+                    Message = "Please check your email to reset your password ",
+                    StatusCode = 200,
+                    Response = true
+                };
 
             }
-
-            return false;
+            return new ApiResponse<bool>
+            {
+                IsSuccess = false,
+                Message = "User does not exists",
+                StatusCode = 400,
+                Response = false
+            };
 
         }
     }

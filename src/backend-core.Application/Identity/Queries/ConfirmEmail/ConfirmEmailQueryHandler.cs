@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using backend_core.Application.Common.Exceptions;
+using backend_core.Domain.Common;
 using backend_core.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -12,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace backend_core.Application.Identity.Queries.ConfirmEmail
 {
 
-    public class ConfirmEmailQueryHandler : IRequestHandler<ConfirmEmailQuery, bool>
+    public class ConfirmEmailQueryHandler : IRequestHandler<ConfirmEmailQuery, ApiResponse<bool>>
     {
         private readonly UserManager<AppUser> _userManager;
         public ConfirmEmailQueryHandler(UserManager<AppUser> userManager)
@@ -21,7 +22,7 @@ namespace backend_core.Application.Identity.Queries.ConfirmEmail
         }
 
 
-        public async Task<bool> Handle(ConfirmEmailQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<bool>> Handle(ConfirmEmailQuery request, CancellationToken cancellationToken)
         {
 
             // 1. Validate if User does Exist
@@ -32,11 +33,23 @@ namespace backend_core.Application.Identity.Queries.ConfirmEmail
                 var result = await _userManager.ConfirmEmailAsync(user, request.Token);
                 if (result.Succeeded)
                 {
-                    return true;
+                    return new ApiResponse<bool>
+                    {
+                        IsSuccess = true,
+                        Message = "Your Email is confirmed successfully",
+                        StatusCode = 200,
+                        Response = true
+                    };
                 }
             }
 
-            return false;
+            return new ApiResponse<bool>
+            {
+                IsSuccess = false,
+                Message = "User does not exists",
+                StatusCode = 400,
+                Response = false
+            };
 
         }
     }
