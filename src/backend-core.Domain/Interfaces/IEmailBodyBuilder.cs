@@ -7,6 +7,6 @@ namespace backend_core.Domain.Interfaces
 {
     public interface IEmailBodyBuilder
     {
-        Task<string> GetRestPasswordEmailBodyAsync(string actionUrl);
+        Task<string> GetRestPasswordEmailBodyAsync(string actionUrl, string Name);
     }
 }

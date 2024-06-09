@@ -52,7 +52,6 @@ namespace backend_core.Infrastructure.Repositories
 
         public IRepository<T> GetRepository<T>() where T : class
         {
-
             if (_repositories.ContainsKey(typeof(T)))
             {
                 var result = _repositories[typeof(T)] as IRepository<T>;

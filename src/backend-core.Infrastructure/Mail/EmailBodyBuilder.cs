@@ -15,11 +15,11 @@ namespace backend_core.Infrastructure.Mail
             _hostingEnvironment = hostingEnvironment;
             basePath = Path.Combine(_hostingEnvironment.ContentRootPath, "..", "backend-core.Infrastructure");
         }
-        public async Task<string> GetRestPasswordEmailBodyAsync(string actionUrl)
+        public async Task<string> GetRestPasswordEmailBodyAsync(string actionUrl, string Name)
         {
             var templatePath = Path.Combine(basePath, "Mail/Templates/ResetPasswordEmail.html");
             var templateContent = await File.ReadAllTextAsync(templatePath);
-            var emailBody = templateContent.Replace("{{ActionUrl}}", actionUrl);
+            var emailBody = templateContent.Replace("{{ActionUrl}}", actionUrl).Replace("{{UserName}}", Name);
             return emailBody;
         }
     }

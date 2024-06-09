@@ -1,14 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using backend_core.Application;
-using backend_core.Application.Modules.Account.Queries.Login;
-using backend_core.Application.Modules.Client.Account;
-using backend_core.Application.Modules.Client.Account.Queries.Login;
 using backend_core.Application.Identity.DTOs;
 using backend_core.Application.Identity.DTOs.Account;
-using backend_core.Application.Identity.Queries.Login;
-using backend_core.Application.Identity.Queries.ConfirmEmail;
 using Microsoft.AspNetCore.Authorization;
+using backend_core.Application.Identity.Client.Commands.Register;
+using backend_core.Application.Identity.Client.Queries.Login;
+using backend_core.Application.Identity.Queries.Client.LoginOtp;
+using backend_core.Application.Identity.Client.Queries.ConfirmEmail;
+using backend_core.Application.Identity.Client.Queries.ForgotPassword;
+using backend_core.Application.Identity.Client.Commands.ResetPassword;
 
 namespace backend_core.Api.Controllers.Client
 {

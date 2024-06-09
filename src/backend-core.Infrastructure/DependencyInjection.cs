@@ -1,9 +1,8 @@
-﻿using backend_core.Application.Identity.Interfaces;
+﻿using backend_core.Application.Identity.Common.Interfaces;
 using backend_core.Domain.Interfaces;
 using backend_core.Domain.Repositories;
 using backend_core.Application.Identity;
 using backend_core.Domain.Models;
-using backend_core.Infrastructure.Authentication;
 using backend_core.Infrastructure.Mail;
 using backend_core.Infrastructure.Persistence.Data;
 using backend_core.Infrastructure.Repositories;
@@ -16,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using backend_core.Infrastructure.Mail.Models;
+using backend_core.Application.Identity.Common.Services;
 
 namespace backend_core.Infrastructure;
 

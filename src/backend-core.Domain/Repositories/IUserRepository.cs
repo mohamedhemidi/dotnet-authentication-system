@@ -8,6 +8,6 @@ namespace backend_core.Domain.Repositories
 {
     public interface IUserRepository : IRepository<AppUser>
     {
-        
+        Task<AppUser> FindByEmailOrUsernameAsync(string userNameOrEmail);
     }
 }
