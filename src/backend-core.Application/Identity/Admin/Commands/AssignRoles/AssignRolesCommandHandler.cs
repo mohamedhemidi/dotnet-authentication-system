@@ -72,7 +72,15 @@ public class AssignRolesCommandHandler : IRequestHandler<AssignRolesCommand, Api
                 }
                 else
                 {
-                    throw new BadRequestException($"Role {role} is already assigned for the user");
+                    await _userManager.RemoveFromRoleAsync(user, role);
+                    return new ApiResponse<List<string>>
+                    {
+                        IsSuccess = true,
+                        Message = "Role has been removed for User",
+                        StatusCode = 200,
+                        Response = [role]
+                    };
+                    // throw new BadRequestException($"Role {role} is already assigned for the user");
                 }
 
 
