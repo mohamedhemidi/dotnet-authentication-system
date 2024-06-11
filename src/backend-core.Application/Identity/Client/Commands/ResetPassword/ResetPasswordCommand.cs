@@ -8,5 +8,5 @@ namespace backend_core.Application.Identity.Client.Commands.ResetPassword;
 public record ResetPasswordCommand(
     ResetPasswordDTO resetPasswordDTO,
     string Token,
-    string Email
+    string EmailOrUsername
 ) : IRequest<ApiResponse<bool>>;

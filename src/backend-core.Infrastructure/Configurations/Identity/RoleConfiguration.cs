@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using backend_core.Domain.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -15,22 +16,22 @@ namespace backend_core.Infrastructure.Configurations.Identity
             builder.HasData(
                  new IdentityRole
                  {
-                     Name = "Super Admin",
+                     Name = UserRoles.SuperAdmin,
                      NormalizedName = "SUPER_ADMIN"
                  },
                 new IdentityRole
                 {
-                    Name = "Admin",
+                    Name = UserRoles.Admin,
                     NormalizedName = "ADMIN"
                 },
                 new IdentityRole
                 {
-                    Name = "Moderator",
+                    Name = UserRoles.Moderator,
                     NormalizedName = "MODERATOR"
                 },
                 new IdentityRole
                 {
-                    Name = "User",
+                    Name = UserRoles.User,
                     NormalizedName = "USER"
                 }
              );

@@ -19,16 +19,18 @@ namespace backend_core.Application.Identity.Client.Commands.ResetPassword;
 public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, ApiResponse<bool>>
 {
     private readonly UserManager<AppUser> _userManager;
+    private readonly IUserRepository _userRepository;
 
-    public ResetPasswordCommandHandler(UserManager<AppUser> userManager)
+    public ResetPasswordCommandHandler(UserManager<AppUser> userManager, IUserRepository userRepository)
     {
         _userManager = userManager;
+        _userRepository = userRepository;
     }
 
     public async Task<ApiResponse<bool>> Handle(ResetPasswordCommand command, CancellationToken cancellationToken)
     {
         // 1. Validate if User does Exist
-        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == command.Email, cancellationToken: cancellationToken);
+        var user = await _userRepository.FindByEmailOrUsernameAsync(command.EmailOrUsername);
 
         if (user != null)
         {

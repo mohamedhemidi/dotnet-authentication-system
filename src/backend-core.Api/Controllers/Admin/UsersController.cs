@@ -1,3 +1,5 @@
+using backend_core.Application.Identity.Admin.Commands.AssignRoles;
+using backend_core.Application.Identity.Admin.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,10 +25,12 @@ namespace backend_core.Api.Controllers.Admin
         }
 
         [Authorize(Roles = "Super Admin")]
-        [HttpGet("assign-role/{id:int}")]
-        public IActionResult AssignRole([FromRoute] int id)
+        [HttpPost("assign-role")]
+        public async Task<IActionResult> AssignRole([FromBody] AssignRoleDTO request)
         {
-            return Ok(id);
+            var command = new AssignRolesCommand(request.EmailOrUsername, request.Roles);
+            var assignRoleResult = await _mediator.Send(command);
+            return Ok(assignRoleResult);
         }
     }
 }

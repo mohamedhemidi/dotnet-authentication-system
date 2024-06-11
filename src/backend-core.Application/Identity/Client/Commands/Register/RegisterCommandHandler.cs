@@ -12,6 +12,7 @@ using backend_core.Domain.Models;
 using MimeKit;
 using Microsoft.AspNetCore.WebUtilities;
 using backend_core.Domain.Common;
+using backend_core.Domain.Constants;
 
 namespace backend_core.Application.Identity.Client.Commands.Register;
 
@@ -59,11 +60,11 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ApiRespon
 
         if (createdUser.Succeeded)
         {
-            var roleResult = await _userManager.AddToRoleAsync(newUser, "User");
+            var roleResult = await _userManager.AddToRoleAsync(newUser, UserRoles.User);
 
             if (roleResult.Succeeded)
             {
-                var token = _jwtTokenGenerator.GenerateToken(newUser, ["User"]);
+                var token = _jwtTokenGenerator.GenerateToken(newUser, [UserRoles.User]);
 
                 // Create And Send Token To Verify By Email
 
