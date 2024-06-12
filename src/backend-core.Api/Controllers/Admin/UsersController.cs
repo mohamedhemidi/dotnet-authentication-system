@@ -1,4 +1,5 @@
 using backend_core.Application.Identity.Admin.Commands.AssignRoles;
+using backend_core.Application.Identity.Admin.Commands.ListUsers;
 using backend_core.Application.Identity.Admin.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -17,11 +18,11 @@ namespace backend_core.Api.Controllers.Admin
         }
         [Authorize(Roles = "Super Admin,Admin")]
         [HttpGet("list")]
-        public IActionResult ListUsers()
+        public async Task<IActionResult> ListUsers()
         {
-            var users = new List<string> { "user1", "user2", "user3948" };
-
-            return Ok(users);
+            var query = new ListUsersCommand();
+            var listOfUsers = await _mediator.Send(query);
+            return Ok(listOfUsers);
         }
 
         [Authorize(Roles = "Super Admin")]

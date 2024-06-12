@@ -15,8 +15,15 @@ dotnet user-secrets set "EmailSettings:From" ""
 ## Create migration 
 
 ```sh
-// create migration
-dotnet ef migrations add <migration_name> -s ./src/backend-core.Api/backend-core.Api.csproj -p ./src/backend-core.Infrastructure/backend-core.Infrastructure.csproj
-// update database
+# create migration
+
+# For MySQL
+dotnet ef migrations add <migration_name> -s ./src/backend-core.Api/backend-core.Api.csproj -p ./src/backend-core.Infrastructure/backend-core.Infrastructure.csproj -o Migrations/MySQL
+
+# For PostgreSQL:
+dotnet ef migrations add <migration_name> -s ./src/backend-core.Api/backend-core.Api.csproj -p ./src/backend-core.Infrastructure/backend-core.Infrastructure.csproj -o Migrations/PostgreSQL
+
+
+# update database
 dotnet ef database update -s ./src/backend-core.Api/backend-core.Api.csproj -p ./src/backend-core.Infrastructure/backend-core.Infrastructure.csproj
 ```

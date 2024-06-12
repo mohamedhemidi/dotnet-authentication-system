@@ -80,9 +80,7 @@ public class AssignRolesCommandHandler : IRequestHandler<AssignRolesCommand, Api
                         StatusCode = 200,
                         Response = [role]
                     };
-                    // throw new BadRequestException($"Role {role} is already assigned for the user");
                 }
-
 
             }
             else

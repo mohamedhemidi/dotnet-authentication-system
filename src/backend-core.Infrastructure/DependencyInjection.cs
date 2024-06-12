@@ -25,13 +25,18 @@ public static class DependencyInjection
     {
         // Database Services:
 
+        // Mysql:
         var connectionString = config.GetConnectionString("mysql");
         services.AddDbContext<ApplicationDbContext>(options =>
                options.UseMySql(
                    connectionString,
-                   ServerVersion.AutoDetect(connectionString)));
+                   ServerVersion.AutoDetect(connectionString), b => b.MigrationsAssembly("backend_core.Infrastructure.Migrations.MySQL")));
 
-
+        // postgreSql:
+        // var connectionString = config.GetConnectionString("postgresql");
+        // services.AddDbContext<ApplicationDbContext>(options =>
+        //        options.UseNpgsql(
+        //            connectionString));
         // Repositories Services:
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
