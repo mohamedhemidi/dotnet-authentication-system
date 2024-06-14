@@ -24,7 +24,7 @@ public static class JwtServiceRegistration
         })
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders()
-        .AddTokenProvider<DataProtectorTokenProvider<AppUser>>(TokenOptions.DefaultProvider); 
+        .AddTokenProvider<DataProtectorTokenProvider<AppUser>>(TokenOptions.DefaultProvider);
 
         // For password reset:
         services.Configure<DataProtectionTokenProviderOptions>(opts => opts.TokenLifespan = TimeSpan.FromHours(10));
@@ -46,6 +46,7 @@ public static class JwtServiceRegistration
             ValidateAudience = true,
             ValidAudience = config["JwtSettings:Audience"],
             ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.Zero,
             IssuerSigningKey = new SymmetricSecurityKey(
                     System.Text.Encoding.UTF8.GetBytes(config["JwtSettings:Secret"]!)
                 )

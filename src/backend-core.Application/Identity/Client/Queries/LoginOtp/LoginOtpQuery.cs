@@ -7,4 +7,4 @@ namespace backend_core.Application.Identity.Queries.Client.LoginOtp;
 
 public record LoginOtpQuery(
     LoginTwoFactorsDTO loginTwoFactorsDTO
-) : IRequest<ApiResponse<AccountResultDTO>>;
+) : IRequest<ApiResponse<AuthResultDTO>>;

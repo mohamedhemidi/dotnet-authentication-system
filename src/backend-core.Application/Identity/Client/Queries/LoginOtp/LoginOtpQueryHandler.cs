@@ -18,26 +18,29 @@ using backend_core.Domain.Common;
 namespace backend_core.Application.Identity.Queries.Client.LoginOtp
 {
 
-    public class LoginOtpQueryHandler : IRequestHandler<LoginOtpQuery, ApiResponse<AccountResultDTO>>
+    public class LoginOtpQueryHandler : IRequestHandler<LoginOtpQuery, ApiResponse<AuthResultDTO>>
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signinManager;
-        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        private readonly IJwtToken _jwtToken;
+        private readonly IRefreshToken _refreshToken;
         private readonly IUserRepository _userRepository;
         public LoginOtpQueryHandler(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signinManager,
-            IJwtTokenGenerator jwtTokenGenerator,
-            IUserRepository userRepository
+            IJwtToken jwtToken,
+            IUserRepository userRepository,
+            IRefreshToken refreshToken
             )
         {
-            _jwtTokenGenerator = jwtTokenGenerator;
+            _jwtToken = jwtToken;
             _userManager = userManager;
             _signinManager = signinManager;
             _userRepository = userRepository;
+            _refreshToken = refreshToken;
         }
 
-        public async Task<ApiResponse<AccountResultDTO>> Handle(LoginOtpQuery query, CancellationToken cancellationToken)
+        public async Task<ApiResponse<AuthResultDTO>> Handle(LoginOtpQuery query, CancellationToken cancellationToken)
         {
             //// 1. Check if user exists:
 
@@ -53,20 +56,23 @@ namespace backend_core.Application.Identity.Queries.Client.LoginOtp
             {
                 //// 3. Create JWT Token and Assign Roles
 
-                var userRoles = await _userManager.GetRolesAsync(user!);
+                var accessToken = await _jwtToken.GenerateToken(user!);
 
-                var token = _jwtTokenGenerator.GenerateToken(user!, userRoles);
+                //// 4. Generate Refresh Token :
+                var refreshToken = _refreshToken.GenerateRefreshToken();
+                user.RefreshToken = refreshToken.Token;
+                user.RefreshTokenExpiry = refreshToken.ExpiryDate;
 
-                return new ApiResponse<AccountResultDTO>
+                await _userManager.UpdateAsync(user);
+
+                return new ApiResponse<AuthResultDTO>
                 {
                     IsSuccess = true,
                     Message = "You are logged in successfully",
                     StatusCode = 200,
-                    Response = new AccountResultDTO(
-                                user!.Id,
-                                user.UserName!,
-                                user.Email!,
-                                token
+                    Response = new AuthResultDTO(
+                            accessToken,
+                            refreshToken
                     )
                 };
             }

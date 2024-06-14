@@ -30,7 +30,7 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
                options.UseMySql(
                    connectionString,
-                   ServerVersion.AutoDetect(connectionString), b => b.MigrationsAssembly("backend_core.Infrastructure.Migrations.MySQL")));
+                   ServerVersion.AutoDetect(connectionString)));
 
         // postgreSql:
         // var connectionString = config.GetConnectionString("postgresql");
@@ -48,12 +48,12 @@ public static class DependencyInjection
         // Authentication Services:
 
         services.Configure<JwtSettings>(config.GetSection(JwtSettings.SectionName));
-        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        services.AddTransient<IJwtToken, JwtToken>();
+        services.AddSingleton<IRefreshToken, RefreshToken>();
 
 
         // Email Service:
-        string infrastructureRoot = Path.Combine(AppContext.BaseDirectory, "Mail", "Templates");
+
 
         services.Configure<EmailSettings>(config.GetSection("EmailSettings"));
         services.AddTransient<IEmailSender, EmailSender>();

@@ -16,11 +16,11 @@ using backend_core.Domain.Constants;
 
 namespace backend_core.Application.Identity.Client.Commands.Register;
 
-public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ApiResponse<AccountResultDTO>>
+public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ApiResponse<AuthResultDTO>>
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly IEmailSender _emailSender;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IJwtToken _jwtToken;
 
     private readonly IUnitOfWork _unitOfWork;
 
@@ -28,15 +28,15 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ApiRespon
         UserManager<AppUser> userManager,
         IUnitOfWork unitOfWork,
         IEmailSender emailSender,
-        IJwtTokenGenerator jwtTokenGenerator
+        IJwtToken jwtToken
         )
     {
         _userManager = userManager;
         _unitOfWork = unitOfWork;
         _emailSender = emailSender;
-        _jwtTokenGenerator = jwtTokenGenerator;
+        _jwtToken = jwtToken;
     }
-    public async Task<ApiResponse<AccountResultDTO>> Handle(RegisterCommand command, CancellationToken cancellationToken)
+    public async Task<ApiResponse<AuthResultDTO>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
         // Check if User Already Exists:
         var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == command.registerDTO.Email);
@@ -64,7 +64,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ApiRespon
 
             if (roleResult.Succeeded)
             {
-                var token = _jwtTokenGenerator.GenerateToken(newUser, [UserRoles.User]);
+                var accessToken = await _jwtToken.GenerateToken(newUser);
 
                 // Create And Send Token To Verify By Email
 
@@ -90,17 +90,14 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ApiRespon
 
                 await _unitOfWork.SubmitTransactionAsync(cancellationToken);
 
-                return new ApiResponse<AccountResultDTO>
+                return new ApiResponse<AuthResultDTO>
                 {
                     IsSuccess = true,
                     Message = "Registered successfully, Please check your email to confirm",
                     StatusCode = 200,
-                    Response = new AccountResultDTO
+                    Response = new AuthResultDTO
                     (
-                       newUser.Id,
-                       newUser.Email,
-                       newUser.UserName,
-                       token
+                       accessToken
                     )
                 };
 

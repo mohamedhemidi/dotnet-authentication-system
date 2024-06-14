@@ -19,28 +19,31 @@ using backend_core.Domain.Common;
 namespace backend_core.Application.Identity.Client.Queries.Login
 {
 
-    public class LoginQueryHandler : IRequestHandler<LoginQuery, ApiResponse<AccountResultDTO>>
+    public class LoginQueryHandler : IRequestHandler<LoginQuery, ApiResponse<AuthResultDTO>>
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signinManager;
-        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        private readonly IJwtToken _jwtToken;
+        private readonly IRefreshToken _refreshToken;
         private readonly IEmailSender _emailSender;
         private readonly IUserRepository _userRepository;
         public LoginQueryHandler(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signinManager,
-            IJwtTokenGenerator jwtTokenGenerator,
+            IJwtToken jwtToken,
             IEmailSender emailSender,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IRefreshToken refreshToken)
         {
-            _jwtTokenGenerator = jwtTokenGenerator;
+            _jwtToken = jwtToken;
             _userManager = userManager;
             _signinManager = signinManager;
             _emailSender = emailSender;
             _userRepository = userRepository;
+            _refreshToken = refreshToken;
         }
 
-        public async Task<ApiResponse<AccountResultDTO>> Handle(LoginQuery query, CancellationToken cancellationToken)
+        public async Task<ApiResponse<AuthResultDTO>> Handle(LoginQuery query, CancellationToken cancellationToken)
         {
 
             // 1. Validate if User does Exist
@@ -66,16 +69,12 @@ namespace backend_core.Application.Identity.Client.Queries.Login
                 };
                 await _emailSender.SendEmail(confirmationOtpEmail);
 
-                return new ApiResponse<AccountResultDTO>
+                return new ApiResponse<AuthResultDTO>
                 {
                     IsSuccess = true,
                     Message = "An OTP message is sent to your email",
                     StatusCode = 200,
-                    Response = new AccountResultDTO(
-                                    user.Id,
-                                    user.UserName!,
-                                    user.Email!
-                               )
+                    Response = new AuthResultDTO()
                 };
             }
 
@@ -87,22 +86,25 @@ namespace backend_core.Application.Identity.Client.Queries.Login
             }
             //// 3. Create JWT Token and Assign Roles
 
-            var userRoles = await _userManager.GetRolesAsync(user);
 
-            var token = _jwtTokenGenerator.GenerateToken(user, userRoles);
+            var accessToken = await _jwtToken.GenerateToken(user);
 
 
-            return new ApiResponse<AccountResultDTO>
+
+            //// 4. Generate Refresh Token :
+            var refreshToken = _refreshToken.GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken.Token;
+            user.RefreshTokenExpiry = refreshToken.ExpiryDate;
+
+            await _userManager.UpdateAsync(user);
+
+            return new ApiResponse<AuthResultDTO>
             {
                 IsSuccess = true,
                 Message = "You are logged in successfully",
                 StatusCode = 200,
-                Response = new AccountResultDTO(
-                                user.Id,
-                                user.Email!,
-                                user.UserName!,
-                                token
-                            )
+                Response = new AuthResultDTO(accessToken, refreshToken)
             };
         }
     }

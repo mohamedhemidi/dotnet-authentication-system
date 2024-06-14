@@ -6,4 +6,4 @@ namespace backend_core.Application.Identity.Client.Queries.Login;
 
 public record LoginQuery(
     LoginDTO loginDTO
-) : IRequest<ApiResponse<AccountResultDTO>>;
+) : IRequest<ApiResponse<AuthResultDTO>>;

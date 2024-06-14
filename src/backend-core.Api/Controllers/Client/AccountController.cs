@@ -10,6 +10,7 @@ using backend_core.Application.Identity.Queries.Client.LoginOtp;
 using backend_core.Application.Identity.Client.Queries.ConfirmEmail;
 using backend_core.Application.Identity.Client.Queries.ForgotPassword;
 using backend_core.Application.Identity.Client.Commands.ResetPassword;
+using backend_core.Application.Identity.Client.Queries.RenewToken;
 
 namespace backend_core.Api.Controllers.Client
 {
@@ -85,6 +86,13 @@ namespace backend_core.Api.Controllers.Client
             var command = new ResetPasswordCommand(request, Token, Email);
             var resetPasswordResult = await _mediator.Send(command);
             return Ok(resetPasswordResult);
+        }
+        [HttpPost("renew-token")]
+        public async Task<IActionResult> RenewToken([FromBody] AuthResultDTO tokens)
+        {
+            var query = new RenewTokenQuery(tokens);
+            var renewTokenResult = await _mediator.Send(query);
+            return Ok(renewTokenResult);
         }
     }
 }

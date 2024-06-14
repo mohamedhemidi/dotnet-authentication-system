@@ -8,4 +8,4 @@ namespace backend_core.Application.Identity.Client.Commands.Register;
 public record RegisterCommand(
     RegisterDTO registerDTO,
     string Uri
-) : IRequest<ApiResponse<AccountResultDTO>>;
+) : IRequest<ApiResponse<AuthResultDTO>>;
