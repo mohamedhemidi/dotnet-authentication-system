@@ -78,14 +78,18 @@ public class AssignRolesCommandHandler : IRequestHandler<AssignRolesCommand, Api
                 }
                 else
                 {
-                    await _userManager.RemoveFromRoleAsync(user, role);
-                    return new ApiResponse<List<string>>
+                    if (role != UserRoles.User)
                     {
-                        IsSuccess = true,
-                        Message = "Role has been removed for User",
-                        StatusCode = 200,
-                        Response = [role]
-                    };
+                        await _userManager.RemoveFromRoleAsync(user, role);
+                        return new ApiResponse<List<string>>
+                        {
+                            IsSuccess = true,
+                            Message = "Role has been removed for User",
+                            StatusCode = 200,
+                            Response = [role]
+                        };
+                    }
+
                 }
 
             }
