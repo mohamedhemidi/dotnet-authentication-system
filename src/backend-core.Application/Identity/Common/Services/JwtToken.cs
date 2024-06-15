@@ -9,6 +9,8 @@ using System.IdentityModel.Tokens.Jwt;
 using backend_core.Domain.Models;
 using backend_core.Application.Identity.DTOs.Account;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http.HttpResults;
+using backend_core.Application.Common.Exceptions;
 
 namespace backend_core.Application.Identity.Common.Services
 {
@@ -62,9 +64,9 @@ namespace backend_core.Application.Identity.Common.Services
 
             var principal = GetClaimsPrincipal(accessToken);
             var user = await _userManager.FindByNameAsync(principal!.Identity!.Name!);
-            if (refreshToken != user!.RefreshToken && result.RefreshToken.ExpiryDate <= DateTime.Now)
+            if (refreshToken == null || refreshToken != user!.RefreshToken || result.RefreshToken.ExpiryDate <= DateTime.Now)
             {
-                return new TokenType { };
+                throw new BadRequestException("Invalid token please login again");
             }
 
             var response = await GenerateToken(user);

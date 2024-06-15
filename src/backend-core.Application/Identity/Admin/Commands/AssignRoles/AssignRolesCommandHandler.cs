@@ -62,6 +62,12 @@ public class AssignRolesCommandHandler : IRequestHandler<AssignRolesCommand, Api
                     await _userManager.AddToRoleAsync(user, role);
                     assignedRoles.Add(role);
 
+                    // Remove and reset user's refresh Token
+                    user.RefreshToken = null;
+                    user.RefreshTokenExpiry = null;
+
+                    await _userManager.UpdateAsync(user);
+
                     return new ApiResponse<List<string>>
                     {
                         IsSuccess = true,
