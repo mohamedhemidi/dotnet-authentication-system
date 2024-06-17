@@ -11,6 +11,9 @@ using backend_core.Application.Identity.Client.Queries.ConfirmEmail;
 using backend_core.Application.Identity.Client.Queries.ForgotPassword;
 using backend_core.Application.Identity.Client.Commands.ResetPassword;
 using backend_core.Application.Identity.Client.Queries.RenewToken;
+using backend_core.Application.Identity.Client.DTOs;
+using backend_core.Application.Identity.Queries.Client.LoginFacebook;
+using backend_core.Application.Identity.Queries.Client.LoginGoogle;
 
 namespace backend_core.Api.Controllers.Client
 {
@@ -93,6 +96,20 @@ namespace backend_core.Api.Controllers.Client
             var query = new RenewTokenQuery(tokens);
             var renewTokenResult = await _mediator.Send(query);
             return Ok(renewTokenResult);
+        }
+        [HttpPost("login-facebook")]
+        public async Task<IActionResult> FacebookAuth([FromBody] LoginFacebookDTO request)
+        {
+            var query = new LoginFacebookQuery(request.accessToken);
+            var loginFacebookResult = await _mediator.Send(query);
+            return Ok(loginFacebookResult);
+        }
+        [HttpPost("login-google")]
+        public async Task<IActionResult> GoogleAuth([FromBody] LoginGoogleDTO request)
+        {
+            var query = new LoginGoogleQuery(request.credentials);
+            var loginGoogleResult = await _mediator.Send(query);
+            return Ok(loginGoogleResult);
         }
     }
 }

@@ -8,9 +8,11 @@ namespace backend_core.Domain.Common
     public abstract class BaseDomainEntity
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public DateTime Created_at { get; set; }
+        public DateTime Created_at { get; set; } = DateTime.Now;
         public DateTime Updated_at { get; set; }
         public Guid Created_by { get; set; }
         public Guid Updated_by { get; set; }
+        public bool Deleted { get; set; } = false;
+
     }
 }

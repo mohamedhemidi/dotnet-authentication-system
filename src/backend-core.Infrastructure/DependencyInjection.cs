@@ -23,6 +23,10 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager config)
     {
+        // Common Services:
+
+        services.AddHttpClient();
+
         // Database Services:
 
         // Mysql:
@@ -58,6 +62,15 @@ public static class DependencyInjection
         services.Configure<EmailSettings>(config.GetSection("EmailSettings"));
         services.AddTransient<IEmailSender, EmailSender>();
         services.AddSingleton<IEmailBodyBuilder, EmailBodyBuilder>();
+
+
+        // Facebook Authentication Service
+        services.Configure<FacebookSettings>(config.GetSection("FacebookSettings"));
+        services.AddSingleton<IFacebookAuth, FacebookAuth>();
+
+
+        // Google Authentication Service
+        services.Configure<GoogleSettings>(config.GetSection("GoogleSettings"));
 
         // Identity Service:
 

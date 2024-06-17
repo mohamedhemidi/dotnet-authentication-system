@@ -6,9 +6,17 @@ dotnet user-secrets set "JwtSettings:Secret" "[128bitKey]"
 
 dotnet user-secrets set "ConnectionString:mysql" "server=localhost;user=<user_name>;password=<password>;database=<database_name>"
 
+dotnet user-secrets set "ConnectionString:postgresql" "Host=<localhost>;Database=<database_name>;Username=<user_name>;Password=<password>"
+
 dotnet user-secrets set "EmailSettings:Username" ""
 dotnet user-secrets set "EmailSettings:Password" ""
 dotnet user-secrets set "EmailSettings:From" ""
+
+dotnet user-secrets set "FacebookSettings:AppId" ""
+dotnet user-secrets set "FacebookSettings:AppSecret" ""
+
+dotnet user-secrets set "GoogleSettings:ClientId" ""
+dotnet user-secrets set "GoogleSettings:ClientSecret" ""
 
 ```
 
