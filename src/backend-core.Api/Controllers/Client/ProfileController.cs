@@ -38,10 +38,10 @@ namespace backend_core.Api.Controllers.Client
             return Ok(profileResult);
         }
         // Update Profile
-        [HttpGet("update/{id}")]
-        public async Task<IActionResult> UpdateProfile([FromRoute] string id, [FromBody] UpdateUserProfileDTO request)
+        [HttpGet("update")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserProfileDTO request)
         {
-            var command = new UpdateUserProfileCommand(id, request);
+            var command = new UpdateUserProfileCommand(HttpContext.User, request);
             var updateResult = await _mediator.Send(command);
             return Ok(updateResult);
         }

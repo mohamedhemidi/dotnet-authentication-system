@@ -29,11 +29,15 @@ public class UpdateUserProfileCommandHandler : IRequestHandler<UpdateUserProfile
 
     public async Task<ApiResponse<bool>> Handle(UpdateUserProfileCommand command, CancellationToken cancellationToken)
     {
+        var currentUserId = _userManager.GetUserId(command.context)!;
+
         // Check if User Already Exists:
-        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == command.id);
+
+        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == currentUserId, cancellationToken: cancellationToken);
+
         if (user == null)
         {
-            throw new NotFoundException(nameof(user), command.id);
+            throw new NotFoundException(nameof(user), currentUserId);
         }
 
         if (command.updateUserProfileDTO.FirstName != null)
