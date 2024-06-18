@@ -13,5 +13,6 @@ namespace backend_core.Domain.Entities
         public string? LastName { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiry { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }
