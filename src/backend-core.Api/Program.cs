@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 {
     app.UseMiddleware<ExceptionMiddleware>();
+    app.UseCors("frontend");
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
